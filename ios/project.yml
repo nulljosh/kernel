@@ -177,6 +177,7 @@ targets:
         NSUserActivityTypes: [com.heyitsmejosh.spine.reading]
     settings:
       base:
+        PRODUCT_NAME: Kernel   # the .app is Kernel.app, not KernelMac.app
         PRODUCT_BUNDLE_IDENTIFIER: com.heyitsmejosh.spine
         MARKETING_VERSION: "20.0.1"
         CURRENT_PROJECT_VERSION: "202610302010"

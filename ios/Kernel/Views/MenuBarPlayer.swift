@@ -30,7 +30,7 @@ struct MenuBarPlayer: View {
 }
 
 /// Screenshots: the menu bar player paused on the sample book, light and dark, written to SHOTS_DIR, then quit.
-/// Run: KernelMac.app/Contents/MacOS/KernelMac -UITEST_MENUBAR_SHOT 1 (no window opens, nothing plays).
+/// Run: Kernel.app/Contents/MacOS/Kernel -UITEST_MENUBAR_SHOT 1 (no window opens, nothing plays).
 @MainActor func menuBarShots() {
     guard let url = Bundle.main.url(forResource: "sample", withExtension: "md"), let md = try? String(contentsOf: url, encoding: .utf8) else { exit(1) }
     Speaker.shared.showPausedForScreenshot(chapters: parseChapters(md))
