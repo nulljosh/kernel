@@ -39,6 +39,7 @@ struct OnboardingView: View {
 
             dots.padding(.bottom, 24)
             bottomButtons
+                .frame(maxWidth: 480)   // iPad: a full-width capsule looks stretched
                 .padding(.horizontal, 20)
                 .padding(.bottom, 24)
         }
