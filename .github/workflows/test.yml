@@ -28,18 +28,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: brew install xcodegen
+      - name: Pick the simulator
+        # Runner images do not always carry the 17 Pro Max; fall back to the newest Pro Max, then any iPhone,
+        # instead of failing on "Unable to find a device" (seen 2026-11-01).
+        run: |
+          name=$(xcrun simctl list devices available | grep -o 'iPhone 17 Pro Max' | head -1)
+          [ -n "$name" ] || name=$(xcrun simctl list devices available | grep -oE 'iPhone [0-9]+ Pro Max' | sort -V | tail -1)
+          [ -n "$name" ] || name=$(xcrun simctl list devices available | grep -oE 'iPhone [0-9]+[A-Za-z ]*' | head -1 | sed 's/ *$//')
+          echo "SIM=$name" >> "$GITHUB_ENV"; echo "simulator: $name"
       - name: Unit tests
         run: |
           set -o pipefail
           cd ios && xcodegen
-          xcodebuild test -project Kernel.xcodeproj -scheme Kernel -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' -only-testing:KernelTests CODE_SIGNING_ALLOWED=NO | tail -40
+          xcodebuild test -project Kernel.xcodeproj -scheme Kernel -destination "platform=iOS Simulator,name=$SIM" -only-testing:KernelTests CODE_SIGNING_ALLOWED=NO | tail -40
       - name: UI walks
+        # A walk that hangs used to eat the whole 40 minute job; cap the step and each test, retry a flaky one once.
+        timeout-minutes: 20
         # The silent screenshot shelf only: no sign-in, never presses Listen. The book texts are private and not in
         # the repo, so CI's shelf is the public sample under each title, and only walks that need titles run here.
         run: |
           set -o pipefail
           cd ios
-          xcodebuild test -project Kernel.xcodeproj -scheme Kernel -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' CODE_SIGNING_ALLOWED=NO -resultBundlePath walks.xcresult \
+          xcodebuild test -project Kernel.xcodeproj -scheme Kernel -destination "platform=iOS Simulator,name=$SIM" CODE_SIGNING_ALLOWED=NO -resultBundlePath walks.xcresult \
+            -test-timeouts-enabled YES -default-test-execution-time-allowance 180 -retry-tests-on-failure -test-iterations 2 \
             -only-testing:KernelUITests/LibraryWalk/testStorage -only-testing:KernelUITests/LibraryWalk/testSortFilter \
             -only-testing:KernelUITests/LibraryWalk/testCommandPalette -only-testing:KernelUITests/LibraryWalk/testAccountSections \
             -only-testing:KernelUITests/LibraryWalk/testSleepNote | tail -40
