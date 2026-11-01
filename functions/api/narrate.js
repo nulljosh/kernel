@@ -25,6 +25,11 @@ export async function onRequest({ request, env }) {
   const title = String(body.title || "this book").slice(0, 200);
   if (!text) return json({ error: "Nothing to narrate." }, 400);
 
+  // Same chapter, same prompt, same script: pay the 70B model once per input, not once per listener.
+  const key = env.TTS_KV && "narr:" + await sha(JSON.stringify([MODEL, title, text, +body.ch || 0, +body.total || 1, body.lang || ""]));
+  const hit = key && await env.TTS_KV.get(key, "json").catch(() => null);
+  if (hit?.length) return json({ script: hit });
+
   let out;
   try {
     out = await env.AI.run(MODEL, { messages: messages(title, text, +body.ch || 0, +body.total || 1, LANGS[body.lang]), max_tokens: 1500 });
@@ -34,8 +39,14 @@ export async function onRequest({ request, env }) {
 
   const script = parseScript(out?.response || "");
   if (!script.length) return json({ error: "Could not build the conversation." }, 502);
+  if (key) await env.TTS_KV.put(key, JSON.stringify(script)).catch(() => {});
   if (token && !LANGS[body.lang]) await rpc("cache_shared_script", { t: token, ch: String(+body.ch || 0), script }).catch(() => {});
   return json({ script });
+}
+
+async function sha(s) {
+  const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
 export function messages(title, text, ch, total, language = "English") {
