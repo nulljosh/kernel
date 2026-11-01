@@ -1,4 +1,4 @@
-# Kernel loop handoff (2026-10-30, evening)
+# Kernel loop handoff (2026-10-31, 17:50)
 
 ## What the loop is
 
@@ -8,15 +8,18 @@ QA: web in headless Chrome with light and dark set, served by `npx wrangler page
 
 ## Where things stand
 
-- The repo is at 20.0.1 (title covers for books with no cover), tagged and the GitHub Latest release. Zero open issues, zero open PRs, zero stale branches, CI green on 20.0.0.
-- The iPhone and Mac builds for 19.0.0 are waiting for App Review.
+- The repo is at 20.0.1 (title covers for books with no cover), tagged and the GitHub Latest release. Five open issues (111 to 115), zero open PRs, CI green on 20.0.0.
+- Two fixes are on main since 20.0.1 with no tag yet: the iPad onboarding Next button is capped in width, and the Mac app builds as Kernel.app instead of KernelMac.app.
+- The iPad library and onboarding and the Mac library and three-pane window were checked by hand. Early Mac launches showed no window until saved window state was ignored, most likely leftover from a screenshot run. The signed-in Mac walk is still Joshua's.
+- iPhone and Mac 20.0.1 are waiting for App Review. 19.0.0 was pulled and never released.
+- Hackers and Painters chapter 2 is summarized and in the library. Chapters 3 to 14 are not photographed yet.
 - Every feature row in roadmap.md is built except row 67 (waits until 1.2.1 is off sale) and the rows that need Workers AI or Joshua's checks.
 - Workers AI is out of its free daily allowance (since 2026-10-28), so narration, Ask and the Aura-2 fallback fail until the paid plan, which is Joshua's call.
 - Media files under `ad/` and `.asc/release/` are untracked on purpose and stay out of git.
 
 ## Next, in order
 
-1. When the 19.0.0 builds clear review on iPhone and Mac, submit 20.0 on both platforms the way [SHIPPING.md](SHIPPING.md) says. Add the French store name in the same pass with `asc apps rename --locale fr-FR --name Noyau`, since the app info is locked while 19.0.0 is in review. Then run `scripts/store-listing.sh` for the four languages, and `scripts/promo.sh` once it is live.
+1. When 20.0.1 clears review on iPhone and Mac, ship the next version the way [SHIPPING.md](SHIPPING.md) says. Add the French store name in that pass with `asc apps rename --locale fr-FR --name Noyau`. Then run `scripts/store-listing.sh` for the four languages, and `scripts/promo.sh` once it is live.
 2. Joshua's checks, listed in roadmap.md: the icon and font at 16 to 32 px, the Workers AI decision, Scan pages on a real iPhone, Shortcuts actions, Handoff, Spotlight, the signed-in Mac walk, Listen with the screen locked, Goodreads in dark mode, merging highlights across two devices, and the summaries still to photograph or finish.
 3. Then the loop picks the next open feature row in roadmap.md.
 
