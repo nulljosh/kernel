@@ -149,7 +149,7 @@ The old Road to 100 table. Rows 3 to 18 shipped as Mac 18.0.0; rows 19 to 99 are
 History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in [docs/SHIPPING.md](docs/SHIPPING.md).
 
 ## Ingested 2026-10-29
-- [ ] Refresh the README screenshots, they are stale. Homepage on GitHub now points at kernel.jaybulb.com (done 2026-10-29).
+- [x] (11-01) Refresh the README screenshots.
 
 ## Ingested 2026-10-30
 - [ ] Raw files for books? (Joshua's note, as written. Question: keep the original photos/scans of each book alongside the summaries, or export raw text?)
