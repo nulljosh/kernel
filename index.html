@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="/brand/tokens.css">
 <style>
 /* Hermes' layout in Kernel's own colours: a glass bar, one giant wordmark, the real reader, one gold band. */
-:root { --bg:#ffffff; --bg2:#f5f5f7; --text:#1d1d1f; --text2:#6e6e73; --text3:#8e8e93; --border:#e5e5ea; --on-accent:#ffffff;
+:root { --font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif; --bg:#ffffff; --bg2:#f5f5f7; --text:#1d1d1f; --text2:#6e6e73; --text3:#8e8e93; --border:#e5e5ea; --on-accent:#ffffff;
   --radius-sm:8px; --card:28px; --gold:#c97a00; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#000000; --bg2:#1c1c1e; --text:#f5f5f7; --text2:#a1a1a6; --text3:#8e8e93; --border:#2c2c2e; --on-accent:#1d1d1f; } }
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -57,8 +57,22 @@ a:hover { text-decoration:underline; }
 .btn.gold:hover { filter:brightness(1.06); }
 .btn.plain { background:var(--bg2); color:var(--text); }
 
-/* hero */
-.hero { text-align:center; padding-block:96px 64px; }
+/* hero: the reader running behind the copy, a paper scrim behind the headline, a bottom fade for the parallax */
+.hero { position:relative; isolation:isolate; overflow:hidden; text-align:center; min-height:calc(100svh - 57px); display:grid; align-items:center; }
+.hero-copy { position:relative; z-index:2; padding-block:80px 64px; }
+.hero::before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(ellipse 58% 50% at 50% 50%, var(--bg) 50%, transparent 100%); }
+.hero::after { content:""; position:absolute; left:0; right:0; bottom:0; height:28%; z-index:1; pointer-events:none; background:linear-gradient(transparent, var(--bg)); }
+.hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; transform:translate3d(0, var(--py, 0), 0); will-change:transform; }
+.kwall { height:100%; max-width:1440px; margin:0 auto; padding:24px; display:grid; grid-template-columns:repeat(3, 1fr); grid-auto-rows:228px; gap:20px; align-content:center; opacity:.75; text-align:left; }
+.kc { background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:20px; display:grid; grid-template-rows:auto auto 1fr auto; gap:6px; overflow:hidden; }
+.kc b { font-size:17px; font-weight:700; letter-spacing:-.01em; }
+.kc small { font-size:13px; color:var(--text3); }
+.kc p { margin-top:6px; font-size:15px; line-height:1.5; color:var(--text2); overflow:hidden; }
+.kc mark { background:var(--accent); color:var(--on-accent); border-radius:3px; padding:0 .1em; }
+.kc .pb { height:4px; border-radius:2px; background:var(--bg2); overflow:hidden; }
+.kc .pb i { display:block; height:100%; width:0; background:var(--accent); transition:width .3s linear; }
+@media (max-width:900px) { .kwall { grid-template-columns:repeat(2, 1fr); } }
+@media (max-width:560px) { .kwall { grid-template-columns:1fr; padding:16px; grid-auto-rows:200px; opacity:.5; } .hero::before { background:radial-gradient(ellipse 120% 46% at 50% 50%, var(--bg) 62%, transparent 100%); } }
 .eyebrow { font-size:13px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text2); }
 .word { font-size:clamp(56px, 11vw, 136px); font-weight:700; letter-spacing:-.045em; line-height:.95; max-width:9em; margin:24px auto 32px; }
 .lede { font-size:clamp(19px, 2.2vw, 22px); color:var(--text2); max-width:30em; margin:0 auto 32px; }
@@ -133,15 +147,12 @@ footer nav svg { width:16px; height:16px; flex:none; fill:none; stroke:currentCo
 
 /* parallax: native scroll-driven CSS, nothing runs where it's unsupported or motion is reduced */
 @supports (animation-timeline: view()) { @media (prefers-reduced-motion: no-preference) {
-  .hero .eyebrow, .hero .word, .hero .lede, .hero .ctas, .hero .fine { animation:rise linear both; animation-timeline:view(); animation-range:exit 0% exit 100%; }
-  .hero .word { --d:-40px; } .hero .lede { --d:-90px; } .hero .ctas, .hero .fine { --d:-130px; } .hero .eyebrow { --d:-20px; }
   .covers { animation:drift linear both; animation-timeline:view(); animation-range:cover; }
   .band .app { animation:lift linear both; animation-timeline:view(); animation-range:entry 0% entry 80%; }
-  @keyframes rise { to { transform:translateY(var(--d)); opacity:0; } }
   @keyframes drift { from { transform:translateY(80px); } to { transform:translateY(-80px); } }
   @keyframes lift { from { transform:translateY(48px) scale(.96); opacity:.4; } }
 } }
-@media (max-width:640px) { .bar nav { display:none; } .bar .wrap { grid-template-columns:auto 1fr; } .bar .brand { grid-column:1; } .hero { padding-block:64px 48px; } }
+@media (max-width:640px) { .bar nav { display:none; } .bar .wrap { grid-template-columns:auto 1fr; } .bar .brand { grid-column:1; } .hero-copy { padding-block:64px 48px; } }
 </style>
 </head>
 <body>
@@ -155,7 +166,10 @@ footer nav svg { width:16px; height:16px; flex:none; fill:none; stroke:currentCo
 </header>
 
 <main id="main">
-<section class="hero wrap">
+<section class="hero">
+  <!-- The real reader behind the copy: chapters from real summaries, read aloud word by word. Decoration only. -->
+  <div class="hero-bg" aria-hidden="true" inert><div class="kwall" id="kwall"></div></div>
+  <div class="wrap hero-copy">
   <p class="eyebrow">Book summaries, chapter by chapter</p>
   <h1 class="word">Remember every book.</h1>
   <p class="lede">You finish a book. A month later you remember one idea. Kernel keeps the rest: every chapter in plain words, to read or to hear.</p>
@@ -164,6 +178,7 @@ footer nav svg { width:16px; height:16px; flex:none; fill:none; stroke:currentCo
     <a class="btn plain" href="#try">Try a chapter</a>
   </div>
   <p class="fine">iPhone, iPad, Mac and the web. Free and open source.</p>
+  </div>
 </section>
 
 <section class="wrap" id="try" aria-label="A sample book">
@@ -243,6 +258,7 @@ fetch('/books.json').then(function (r) { return r.json(); }).then(function (d) {
 }).catch(function () {});
 if ('serviceWorker' in navigator) addEventListener('load', function () { navigator.serviceWorker.register('/sw.js'); });
 </script>
+<script src="/hero.js" defer></script>
 <script type="module" src="/i18n.js"></script>
 </body>
 </html>
