@@ -20,3 +20,6 @@ Weakest first. "Inferred" lines are my best guess from what I know of each book 
 
 ## Not gaps
 Fiend is a novel (week-by-week summary is right). Good Feng Shui merges chapters 3-5, 6-8, 15-19 by photo batch, which is fine.
+
+## Heading pass (2026-11-02)
+Exercise Science now has one `##` per chapter (3 to 18; chapters 1 and 2 were never photographed). ChatGPT and Claude AI were re-leveled so the title is the only `#`. System Design, Living Well and Newton were already fine. Agentic AI For Dummies has only chapters 12 to 16 in Kernel: chapters 2 to 11 were summarized earlier but no text copy survives (only a PDF note in the Books CLAUDE.md), so they need re-photographing or the PDF.
