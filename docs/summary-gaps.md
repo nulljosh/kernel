@@ -1,4 +1,6 @@
-# Summary gaps (audit 2026-11-02)
+# Summary gaps (audit 2026-11-02, updated after the photo pass)
+
+Done 2026-11-02: all 88 raw photos summarized and deleted (Hackers & Painters ch 3, Video Game Design ch 5 and 6, ChatGPT For Dummies intro and ch 1, Claude AI For Dummies intro). Adult Autism duplicate chapters and the old Accounting file removed. Rows 2, 3 and 11 below are now partly filled; the rest need new photos. Data Science chapters 1 to 19 never reached Kernel (only chapter 20 did), so nothing placeholder ships.
 
 Weakest first. "Inferred" lines are my best guess from what I know of each book and its neighbouring chapters, not from the pages. Never import them as summary text; they only say what to photograph or what to expect.
 
