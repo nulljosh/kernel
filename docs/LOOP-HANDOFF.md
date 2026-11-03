@@ -1,4 +1,4 @@
-# Kernel loop handoff (2026-10-31, 17:50)
+# Kernel loop handoff (2026-11-02, checkpoint)
 
 ## What the loop is
 
@@ -12,7 +12,8 @@ QA: web in headless Chrome with light and dark set, served by `npx wrangler page
 - Two fixes are on main since 20.0.1 with no tag yet: the iPad onboarding Next button is capped in width, and the Mac app builds as Kernel.app instead of KernelMac.app.
 - The iPad library and onboarding and the Mac library and three-pane window were checked by hand. Early Mac launches showed no window until saved window state was ignored, most likely leftover from a screenshot run. The signed-in Mac walk is still Joshua's.
 - iPhone and Mac 20.0.1 are waiting for App Review. 19.0.0 was pulled and never released.
-- Hackers and Painters chapter 2 is summarized and in the library. Chapters 3 to 14 are not photographed yet.
+- Books has no raw photos left. Every summary that could be written from them is in the library. Gaps still needing new photos are listed in docs/summary-gaps.md (Hackers and Painters essays 4 to 14, Data Science, Agentic AI 2 to 11, and others).
+- The import script's owner ID is current, so imports work again with the Keychain service key.
 - Every feature row in roadmap.md is built except row 67 (waits until 1.2.1 is off sale) and the rows that need Workers AI or Joshua's checks.
 - Workers AI is out of its free daily allowance (since 2026-10-28), so narration, Ask and the Aura-2 fallback fail until the paid plan, which is Joshua's call.
 - Media files under `ad/` and `.asc/release/` are untracked on purpose and stay out of git.
@@ -20,7 +21,7 @@ QA: web in headless Chrome with light and dark set, served by `npx wrangler page
 ## Next, in order
 
 1. When 20.0.1 clears review on iPhone and Mac, ship the next version the way [SHIPPING.md](SHIPPING.md) says. Add the French store name in that pass with `asc apps rename --locale fr-FR --name Noyau`. Then run `scripts/store-listing.sh` for the four languages, and `scripts/promo.sh` once it is live.
-2. Joshua's checks, listed in roadmap.md: the icon and font at 16 to 32 px, the Workers AI decision, Scan pages on a real iPhone, Shortcuts actions, Handoff, Spotlight, the signed-in Mac walk, Listen with the screen locked, Goodreads in dark mode, merging highlights across two devices, and the summaries still to photograph or finish.
+2. Joshua's checks, listed in roadmap.md: the icon and font at 16 to 32 px, the Workers AI decision, Scan pages on a real iPhone, Shortcuts actions, Handoff, Spotlight, the signed-in Mac walk, Listen with the screen locked, Goodreads in dark mode, merging highlights across two devices, and new photos for the books in docs/summary-gaps.md.
 3. Then the loop picks the next open feature row in roadmap.md.
 
 ## Restart prompt
