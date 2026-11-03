@@ -13,7 +13,7 @@ percent of what is already stored; FORCE=1 overrides. Same guard as sync-summari
 import getpass, json, os, pathlib, subprocess, sys, urllib.parse, urllib.request
 
 API = os.environ.get("SPARK_API", "https://api.jaybulb.com")
-OWNER_ID = "7453f262-f3d7-41f6-a765-b83ad561b9e3"
+OWNER_ID = "e4a89c93-6b53-49be-93eb-8ada05198c69"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SUMMARIES = pathlib.Path(os.environ.get("SUMMARIES_DIR", ROOT / "summaries"))
 SHRINK = int(os.environ.get("SHRINK_PCT", "80"))
