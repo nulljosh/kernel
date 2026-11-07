@@ -148,5 +148,5 @@ History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in 
 ## Ingested 2026-11-06
 - [ ] Needs cohesive hero background. (notes/attachments/2026-11-06/kernel-1.png)
 - [ ] Download feature starts but doesn't work: stuck on Saving 0% on Pre Calculus For Dummies, iPhone. (notes/attachments/2026-11-06/kernel-3.png)
-- [ ] Replace `@cf/llava-hf/llava-1.5-7b-hf` in `functions/api/summarize-photo.js` before Cloudflare deprecates it on 2026-11-20. Cloudflare suggests `@cf/moondream/moondream3.1-9B-A2B`.
+- [x] Photo summaries moved off llava to Gemma 4 before the Nov 20 cutoff.
 - [ ] New due date, update it. Library receipt 2026-11-04, 10 books due 2026-11-25, list in the wiki `school.md`. (notes/attachments/2026-11-06/kernel-2.png) Question: where does this due date live, in Kernel or in Reminders?

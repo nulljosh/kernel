@@ -4,7 +4,9 @@
 // disk, R2, or a database. Requires a signed-in Kernel account (checked against spark-api
 // auth) so this can't become a free public OCR endpoint.
 import { tooMany, slowDown } from "../../src/lib/quota.js";
-const VISION_MODEL = "@cf/llava-hf/llava-1.5-7b-hf";
+// ponytail: Gemma over the Moondream Cloudflare suggests, which returns {} unless streamed.
+// max_tokens covers its thinking too; too low and content comes back null.
+const VISION_MODEL = "@cf/google/gemma-4-26b-a4b-it";
 const API = "https://api.jaybulb.com";
 const MAX_BYTES = 8 * 1024 * 1024;
 
@@ -21,24 +23,41 @@ export async function onRequest({ request, env }) {
   if (!file || typeof file === "string") return json({ error: "No image." }, 400);
   if (file.size > MAX_BYTES) return json({ error: "Image too large." }, 400);
 
-  const bytes = [...new Uint8Array(await file.arrayBuffer())];
+  const image = await dataUri(file);
 
   let out;
   try {
     out = await env.AI.run(VISION_MODEL, {
-      image: bytes,
-      prompt:
-        "This is a photo of a page from a book. Summarize what happens or what is argued " +
-        "on this page in 2-4 plain sentences. Do not describe the physical page, just its content.",
-      max_tokens: 512,
+      messages: [{
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text:
+              "This is a photo of a page from a book. Summarize what happens or what is argued " +
+              "on this page in 2-4 plain sentences. Do not describe the physical page, just its content.",
+          },
+          { type: "image_url", image_url: { url: image } },
+        ],
+      }],
+      max_tokens: 2048,
     });
   } catch {
     return json({ error: "Could not read that photo." }, 502);
   }
 
-  const text = (out?.description || out?.response || "").trim();
+  const text = (out?.choices?.[0]?.message?.content || out?.response || "").trim();
   if (!text) return json({ error: "Could not read that photo." }, 502);
   return json({ text });
+}
+
+async function dataUri(file) {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let bin = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  }
+  return `data:${file.type || "image/jpeg"};base64,${btoa(bin)}`;
 }
 
 async function isSignedIn(authHeader) {
