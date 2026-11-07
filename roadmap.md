@@ -20,18 +20,7 @@ App Store sheets read: Blinkist, Shortform, Readwise Reader (Headway's search hi
 | 19.2.0 | Browse your books by topic (in the Show menu, from each title) | Blinkist, Shortform | M | built |
 | 19.3.0 | A reflection prompt at the end of each chapter | Shortform | S | shipped, then cut in 19.3.1 (Joshua: no questions) |
 
-### 20.0.0 (built 2026-10-30): real features and stability (Joshua, 2026-10-30)
-From the open GitHub issues. One row per minor; fixes ship as patches.
-
-| Minor | What | Issue | Status |
-|---|---|---|---|
-| 19.4.0 | Mark a book finished, and a Finished filter | #83 | built |
-| 19.5.0 | Search at the top, Settings in a bottom bar on iPhone | #86, #75 | built |
-| 19.6.0 | Goodreads CSV import in the apps (the web has it) | #80 | built |
-| 19.7.0 | Mark a read book "photograph next" so the read list is the summary queue | #81 | built |
-| had it | Natural voice: chapters left and the fallback line are in Account > Listening | #78 | already built |
-| fix | QA the iPad and Mac layouts | #3, #87 | open |
-| fix | Pull the live store text into metadata/ (19.0.0, en es de; add fr-FR as Noyau once 19.0 clears) | #99 | built |
+20.0.0 detail moved to `docs/roadmap-20.md`.
 
 ## Rows built (2026-10-28 to 10-30)
 The old Road to 100 table. Rows 3 to 18 shipped as Mac 18.0.0; rows 19 to 99 are 18.1.0 (they were tagged one major each by mistake; those tags are gone). Rows 67 and 93 still wait on the store and Workers AI.
@@ -155,3 +144,9 @@ History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in 
 
 ## Ingested 2026-10-31
 - [ ] Reference: ElevenReader, read books aloud https://apps.apple.com/ca/app/elevenreader-read-books-aloud/id6479373050 (note was the title Kernel plus this link only). Clarify: copy a feature or just a competitor to watch?
+
+## Ingested 2026-11-06
+- [ ] Needs cohesive hero background. (notes/attachments/2026-11-06/kernel-1.png)
+- [ ] Download feature starts but doesn't work: stuck on Saving 0% on Pre Calculus For Dummies, iPhone. (notes/attachments/2026-11-06/kernel-3.png)
+- [ ] Replace `@cf/llava-hf/llava-1.5-7b-hf` in `functions/api/summarize-photo.js` before Cloudflare deprecates it on 2026-11-20. Cloudflare suggests `@cf/moondream/moondream3.1-9B-A2B`.
+- [ ] New due date, update it. Library receipt 2026-11-04, 10 books due 2026-11-25, list in the wiki `school.md`. (notes/attachments/2026-11-06/kernel-2.png) Question: where does this due date live, in Kernel or in Reminders?
