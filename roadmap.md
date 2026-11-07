@@ -137,8 +137,6 @@ The old Road to 100 table. Rows 3 to 18 shipped as Mac 18.0.0; rows 19 to 99 are
 
 History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in [docs/SHIPPING.md](docs/SHIPPING.md).
 
-## Ingested 2026-10-29
-
 ## Ingested 2026-10-30
 - [ ] Raw files for books? (Joshua's note, as written. Question: keep the original photos/scans of each book alongside the summaries, or export raw text?)
 
@@ -147,6 +145,4 @@ History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in 
 
 ## Ingested 2026-11-06
 - [ ] Needs cohesive hero background. (notes/attachments/2026-11-06/kernel-1.png)
-- [x] Download crashed once KV hit its write limit and looked stuck at 0%. Writes are guarded and progress moves per line. Full books still need Workers Paid: 4 KV writes a line against 1,000 a day.
-- [x] Photo summaries moved off llava to Gemma 4 before the Nov 20 cutoff.
 - [ ] New due date, update it. Library receipt 2026-11-04, 10 books due 2026-11-25, list in the wiki `school.md`. (notes/attachments/2026-11-06/kernel-2.png) Question: where does this due date live, in Kernel or in Reminders?
