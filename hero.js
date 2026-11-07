@@ -10,29 +10,22 @@
     ["The Art of War", "Chapter 3: Be like water", "Water avoids high ground and runs to the low places. An army should do the same: avoid strength, strike weakness, and change shape to fit what the enemy does."],
     ["Exercise Science For Dummies", "Chapter 3", "Lift heavy enough. Loads of at least sixty percent of your one-rep max cause the stress that drives adaptation."],
     ["Data Science For Dummies", "Chapter 20: Ten Free Tools", "A rundown of ten free or low-cost tools covering the whole data science workflow: scraping, exploration, machine learning, visualization and infographics."]];
-  var mq = function (q) { return matchMedia(q).matches; };
-  var n = mq('(max-width: 560px)') ? 3 : mq('(max-width: 900px)') ? 6 : 9, still = mq('(prefers-reduced-motion: reduce)');
-  for (var i = 0; i < n; i++) (function (i) {
-    var el = document.createElement('div'); el.className = 'kc';
-    el.innerHTML = '<b></b><small></small><p></p><div class="pb"><i></i></div>';
-    wall.appendChild(el);
-    var b = el.querySelector('b'), sm = el.querySelector('small'), p = el.querySelector('p'), bar = el.querySelector('.pb i'), k = i;
-    function play() {
-      var c = C[k % C.length]; k += n;
-      b.textContent = c[0]; sm.textContent = c[1]; p.textContent = ''; bar.style.width = '0';
-      var words = c[2].split(' ').map(function (w) { var s = document.createElement('span'); s.textContent = w; p.append(s, ' '); return s; });
-      if (still) return;
-      var j = 0, last;
-      (function step() {
-        if (last) last.replaceWith(last.firstChild);
-        if (j >= words.length) { last = null; return setTimeout(play, 1800); }
-        var m = document.createElement('mark'); words[j].replaceWith(m); m.append(words[j]); last = m;
-        bar.style.width = (++j / words.length * 100) + '%';
-        setTimeout(step, 240 + Math.random() * 120);
-      })();
-    }
-    setTimeout(play, i * 600);
-  })(i);
+  // One open book behind the copy, not a grid of cards: every summary runs on as a page, and the read-aloud
+  // highlight moves through it word by word.
+  var words = [];
+  C.forEach(function (c) {
+    var b = document.createElement('b'), sm = document.createElement('small'), p = document.createElement('p');
+    b.textContent = c[0]; sm.textContent = c[1];
+    c[2].split(' ').forEach(function (w) { var s = document.createElement('span'); s.textContent = w; p.append(s, ' '); words.push(s); });
+    wall.append(b, sm, p);
+  });
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var j = 0;
+  setInterval(function () {
+    words[j].classList.remove('on');
+    j = (j + 1) % words.length;
+    words[j].classList.add('on');
+  }, 300);
 })();
 // Hero parallax: the wall drifts at 0.45, the copy lifts at 0.2 and fades. Off under reduced motion.
 (function () {
