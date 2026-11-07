@@ -172,10 +172,11 @@ final class Speaker: NSObject, AVSpeechSynthesizerDelegate {
         defer { downloading = nil }
         for i in chapters.indices {
             guard self.slug == slug, let s = await script(for: i).value else { status = "Download stopped. Try again with a connection."; return }
-            for l in s {
+            for (k, l) in s.enumerated() {
                 if await Narrator.speak(l.line, host: narrator, ch: i, slug: slug) == nil {
                     status = "Download stopped (\(Narrator.lastFailure ?? "unknown")). Try again later."; return
                 }
+                downloading = (Double(i) + Double(k + 1) / Double(s.count)) / Double(chapters.count)
             }
             downloading = Double(i + 1) / Double(chapters.count)
         }

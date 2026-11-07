@@ -62,7 +62,7 @@ export async function onRequest({ request, env }) {
   if (r?.ok) {
     const out = await r.json();
     const payload = JSON.stringify({ audio: out.audio_base64, words: words(text, out.alignment || out.normalized_alignment) });
-    if (env.TTS_KV) await env.TTS_KV.put(key, payload);
+    if (env.TTS_KV) await env.TTS_KV.put(key, payload).catch(() => {});  // the line is paid for, so send it even if the store is full
     return new Response(payload, { headers: { ...hdr, "X-Tts-Cache": "miss" } });
   }
   return aura(env, text, who, hdr, over);
@@ -88,7 +88,7 @@ async function aura(env, text, who, hdr, why) {
   } catch { return fail; }
   if (!mp3.length) return fail;
   const payload = JSON.stringify({ audio: b64(mp3), words: estWords(text, mp3.length * 8 / AURA_BPS) });
-  if (env.TTS_KV) await env.TTS_KV.put(key, payload);
+  if (env.TTS_KV) await env.TTS_KV.put(key, payload).catch(() => {});  // the line is paid for, so send it even if the store is full
   return new Response(payload, { headers: { ...hdr, "X-Tts-Cache": "miss", "X-Tts-Voice": "aura" } });
 }
 const AURA_BPS = 48000;  // constant-bitrate mp3, so bytes give the length in seconds
@@ -124,7 +124,9 @@ export async function spend(kv, who, chars, caps, now, pre = "") {
   if (m + chars > caps.month) return "month";
   if (d + chars > caps.day) return "day";
   const u = +(await kv.get(uk)) || 0;   // what this account spent this month, for the usage readout
-  await Promise.all([kv.put(mk, String(m + chars)), kv.put(dk, String(d + chars), { expirationTtl: 172800 }), kv.put(uk, String(u + chars), { expirationTtl: 3456000 })]);
+  // KV blocks writes past its daily limit. With no count there is no cap, so stop spending instead of guessing.
+  const saved = await Promise.all([kv.put(mk, String(m + chars)), kv.put(dk, String(d + chars), { expirationTtl: 172800 }), kv.put(uk, String(u + chars), { expirationTtl: 3456000 })]).then(() => true, () => false);
+  if (!saved) return "store";
   return null;
 }
 
