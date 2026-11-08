@@ -144,4 +144,3 @@ History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in 
 - [ ] Reference: ElevenReader, read books aloud https://apps.apple.com/ca/app/elevenreader-read-books-aloud/id6479373050 (note was the title Kernel plus this link only). Clarify: copy a feature or just a competitor to watch?
 
 ## Ingested 2026-11-06
-- [x] (2026-11-07: tracked in Reminders, due 2026-11-25 9am with an alert 2 days before; Kernel has no due dates) New due date, update it. Library receipt 2026-11-04, 10 books due 2026-11-25, list in the wiki `school.md`. (notes/attachments/2026-11-06/kernel-2.png) Question: where does this due date live, in Kernel or in Reminders?
