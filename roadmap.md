@@ -10,16 +10,7 @@ Semver is honest from here: a feature is a minor, a fix is a patch, and a major 
 | 19.0.0 | Major (Joshua's call, 2026-10-30): Mobbin pass below, launch film (ad/kernel-19.json) | built |
 
 ## 19.x: gaps from the 19.0 Mobbin pass (2026-10-30)
-App Store sheets read: Blinkist, Shortform, Readwise Reader (Headway's search hit the wrong app). Kernel already matches them on chapters, audio, highlights, key ideas, a weekly goal and offline. Skipped: AI rewrites of a selection (Workers AI is down), community, paywalls. One row is one minor, apps and web together.
-
-| Minor | Gap | Seen in | Size | Status |
-|---|---|---|---|---|
-| had it | Stats: books finished per year, minutes, streak (StatsView, the weekly goal) | Blinkist | | already built |
-| had it | Export highlights as Markdown (Highlights > Export on web and apps) | Readwise | | already built |
-| 19.1.0 | One-page summary per book, built from the chapters' In short lines | Shortform | S | built |
-| 19.2.0 | Browse your books by topic (in the Show menu, from each title) | Blinkist, Shortform | M | built |
-| 19.3.0 | A reflection prompt at the end of each chapter | Shortform | S | shipped, then cut in 19.3.1 (Joshua: no questions) |
-
+All rows done. Detail moved to `docs/roadmap-19.md`.
 20.0.0 detail moved to `docs/roadmap-20.md`.
 
 ## Rows built (2026-10-28 to 10-30)
@@ -144,3 +135,8 @@ History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in 
 - [ ] Reference: ElevenReader, read books aloud https://apps.apple.com/ca/app/elevenreader-read-books-aloud/id6479373050 (note was the title Kernel plus this link only). Clarify: copy a feature or just a competitor to watch?
 
 ## Ingested 2026-11-06
+
+## Ingested 2026-11-14
+- [ ] (Note "Kernel") Taking photos of every page is super impractical. PDF and EPUB import already ship (row 32). Still open from the note: Google Drive import for existing PDFs, Kindle / Readwise highlights import, camera scanning as backup only. Must work without API keys.
+- [ ] (Note "Kernel") A skill that finds EPUBs or PDFs for the books already summarized, plus any list we give it, and also takes a link or file directly. Extends `summarize-books`? Question: only legally free sources (Gutenberg, Standard Ebooks, Internet Archive), or files Joshua owns?
+- [ ] (Note "Kernel") Copy the UI and UX of this book tracking app: "Book Tracker" home with colored count tiles (All, Library, Wishlist, Not Owned, Statistics, Quotes), a pages-read / minutes-listened chart, reading statuses list (Unread, To read, Reading, Read, Not finished), floating + button. Screenshot: ~/Documents/Code/notes/attachments/2026-11-14/kernel-1.png
