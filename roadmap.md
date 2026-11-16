@@ -117,6 +117,7 @@ The old Road to 100 table. Rows 3 to 18 shipped as Mac 18.0.0; rows 19 to 99 are
 | 99 | Search by voice: dictate into search, on the device | apps | built (CHANGELOG 99.0.0: the keyboard mic and Mac dictation fill search; a visible mic only if people miss it) |
 
 ## Open outside the table
+- [ ] Restore Joshua's Kernel library: account and summaries missing from D1, see runs/2026-11-15-kernel-library/HANDOFF.md
 - [ ] Icon and font A+: check the icon at 16 to 32 px, and whether the seed belongs on the other dots (blocked: Joshua's eye, 2026-11-01; 16 to 32 px checked clean).
 - [ ] (11-01: narration cached in KV) Workers AI ran out of its 10,000 free daily neurons on 2026-10-28 (narration scripts, Ask, page photos and the Aura-2 fallback fail until 00:00 UTC). Workers Paid is $5 a month (Joshua's call). Then tune the meaning floor (0.6) on real bge scores.
 - [ ] (blocked: App Review, 20.0.1 iOS waiting and Mac in review 2026-11-01) French listing: Apple refused "Kernel" in fr-FR (taken). Use Noyau; the app info is locked while 19.0.0 is in review, so add it on the next version (`asc apps rename --locale fr-FR --name Noyau`).
