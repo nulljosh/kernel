@@ -1,31 +1,37 @@
-# Kernel loop handoff (2026-11-02, checkpoint)
+# Kernel loop handoff (2026-11-16, after midnight)
 
 ## What the loop is
 
-The loop takes the open feature rows in roadmap.md, one at a time. A feature is a minor and a fix is a patch. A major only on Joshua's call, with a Mobbin pass and a film. Never aim the loop at a version number. Each feature is built on every platform its row names, checked with light and dark screenshots, marked built, added to the CHANGELOG, committed by exact path, tagged and pushed by name, and released on GitHub. The web is deployed when it changed. Replies to Joshua stay under two lines, in plain English.
+The loop works on the library, not on new features. Its job is to make sure every book Joshua owns has a complete, correct summary in his Kernel account, and to patch the ones that are not. A summary is incomplete when a chapter is missing, a chapter is a placeholder (under about 100 words of "part of a comprehensive guide"), a book is duplicated, or a cover is missing.
 
-QA: web in headless Chrome with light and dark set, served by `npx wrangler pages dev dist`. Apps with `sh ios/scripts/shots.sh` on headless simulators. Never press Listen in a simulator. No GUI launches on Joshua's screen without asking.
+Sources are PDFs Joshua puts in iCloud Books. The summarize-books skill is PDF-first and reads page photos only when no PDF exists. Summaries are written in my own words. Imports go through scripts/import-summaries.py. Never ship a placeholder, and never import a summary that got shorter than the one it replaces: sync-summaries.sh copies iCloud over the repo and does not merge, so after any sync run `git diff --stat` and treat a smaller summary as a bug.
+
+If the loop changes the app, a feature is a minor and a fix is a patch, and a major is Joshua's call. Never pick a version number yourself. Commit by exact path. QA with headless simulators; never press Listen in a simulator; no GUI launches on Joshua's screen without asking. Use ASC_BYPASS_KEYCHAIN=1 for asc. Replies under two lines, plain English.
+
+The Kernel account's database went missing sometime after 2026-11-10 and was restored on 2026-11-16 by rewinding it briefly and copying the account and books back. The cause is still unknown. Do not rewind the database again without Joshua's yes.
 
 ## Where things stand
 
-- The repo is at 20.0.1 (title covers for books with no cover), tagged and the GitHub Latest release. Five open issues (111 to 115), zero open PRs, CI green on 20.0.0.
-- Two fixes are on main since 20.0.1 with no tag yet: the iPad onboarding Next button is capped in width, and the Mac app builds as Kernel.app instead of KernelMac.app.
-- The iPad library and onboarding and the Mac library and three-pane window were checked by hand. Early Mac launches showed no window until saved window state was ignored, most likely leftover from a screenshot run. The signed-in Mac walk is still Joshua's.
-- iPhone and Mac 20.0.1 are waiting for App Review. 19.0.0 was pulled and never released.
-- Books has no raw photos left. Every summary that could be written from them is in the library. Gaps still needing new photos are listed in docs/summary-gaps.md (Hackers and Painters essays 4 to 14, Data Science, Agentic AI 2 to 11, and others).
-- The import script's owner ID is current, so imports work again with the Keychain service key.
-- Every feature row in roadmap.md is built except row 67 (waits until 1.2.1 is off sale) and the rows that need Workers AI or Joshua's checks.
-- Workers AI is out of its free daily allowance (since 2026-10-28), so narration, Ask and the Aura-2 fallback fail until the paid plan, which is Joshua's call.
-- Media files under `ad/` and `.asc/release/` are untracked on purpose and stay out of git.
+- Repo at 20.1.0: tagged, GitHub release out, web deployed at kernel.jaybulb.com. Add a book imports a PDF or EPUB and summarizes each chapter; page photos and the document camera are gone; scanned PDFs are read on device in the apps; signing in lands on the summaries.
+- The App Store build for 20.1.0 is not submitted. Submission is Joshua's call.
+- The library is back with 34 books plus an old Accounting duplicate. Graph Algorithms has its real cover from its PDF. Claude AI For Dummies has no cover.
+- Recovered from an old Mac app cache: 6 books. Summarized from PDFs on 2026-11-16: Graph Algorithms the Fun Way, TI-89 For Dummies, Writing a C Compiler.
+- The 109 leftover page photos are deleted.
+- Books still needing PDFs before they can be completed: Agentic AI For Dummies 1 to 11, Apple 1 to 12, Becoming Steve Jobs 1 to 10, ChatGPT For Dummies 4 on, Claude AI For Dummies 4 on, Data Science For Dummies 1 to 19, Exercise Science 1 to 2, Hackers and Painters 1 and 7 to 15, Video Game Design For Dummies 10 on, plus Cracking the AP Computer Science, Raw and The Man Who Solved the Market.
+- Joshua's checks that stay with him: Scan pages is gone, so drop it; the Shortcuts actions, Handoff, Spotlight, the signed-in Mac walk, Listen on a real phone with the screen locked, Goodreads in iOS dark mode, two devices merging highlights.
+- Simulator QA on the real account is blocked: an unsigned simulator build cannot write the keychain. Build it signed and launch with SIMCTL_CHILD_KERNEL_QA_REFRESH set.
 
 ## Next, in order
 
-1. When 20.0.1 clears review on iPhone and Mac, ship the next version the way [SHIPPING.md](SHIPPING.md) says. Add the French store name in that pass with `asc apps rename --locale fr-FR --name Noyau`. Then run `scripts/store-listing.sh` for the four languages, and `scripts/promo.sh` once it is live.
-2. Joshua's checks, listed in roadmap.md: the icon and font at 16 to 32 px, the Workers AI decision, Scan pages on a real iPhone, Shortcuts actions, Handoff, Spotlight, the signed-in Mac walk, Listen with the screen locked, Goodreads in dark mode, merging highlights across two devices, and new photos for the books in docs/summary-gaps.md.
-3. Then the loop picks the next open feature row in roadmap.md.
+1. Audit every book in the account for the issues above (missing chapters, placeholder chapters, duplicates, missing covers). Write the list into docs/summary-gaps.md, replacing the 2026-11-02 audit, and show Joshua the list in chat.
+2. Patch the books whose PDFs are already in iCloud Books. One book at a time: summarize from the PDF, import, and check the chapter count against the PDF's table of contents before moving on.
+3. As Joshua adds PDFs, patch the rest of the list in the order it gives, one book per pass.
+4. Delete the old Accounting duplicate once the longer copy is confirmed to cover it.
+5. Give Claude AI For Dummies a cover.
+6. Stop when every book on the list is complete. Submitting 20.1.0 to the App Store waits for Joshua's word.
 
 ## Restart prompt
 
 ```
-/loop Kernel loop, in ~/Documents/Code/kernel. Read docs/LOOP-HANDOFF.md first, then take the next open feature row in roadmap.md (skip rows marked waits, and anything that needs Joshua's check). Each feature is a minor and each fix a patch. Never pick a version number yourself, and never start a major, which is Joshua's call. Build it on every platform the row names, QA with light and dark screenshots, never press Listen in a simulator, and no GUI launches on Joshua's screen without asking. Refresh any background task older than 5 minutes each tick. Use ASC_BYPASS_KEYCHAIN=1 for asc. Commit by exact path, push, and deploy the web with wrangler pages deploy if it changed. Stop when no open feature row is left. Replies under 2 lines, plain English.
+/loop until all summaries are recovered and every incomplete book is patched, in ~/Documents/Code/kernel. Read docs/LOOP-HANDOFF.md and docs/summary-gaps.md first. Audit the library and list the issues before patching anything, then patch the books whose PDFs are in iCloud Books, one at a time, checking each chapter count against the PDF. Use the summarize-books skill (PDF first, photos only when no PDF exists). Never ship a placeholder and never import a summary smaller than the one it replaces. Do not touch the database rewind, the App Store submission or any version number without Joshua. Commit by exact path. Replies under two lines, plain English.
 ```

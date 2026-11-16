@@ -47,7 +47,7 @@ The old Road to 100 table. Rows 3 to 18 shipped as Mac 18.0.0; rows 19 to 99 are
 | 29 | Goodreads on the web through your Goodreads export file | web | built (goodreads-export.js parses the CSV in the browser, kept per account in localStorage, cleared on sign-out; never sent to the server) |
 | 30 | Import Kindle highlights (My Clippings.txt) | apps, web | built (kindle.js and Kindle.swift; each book gets a Kindle highlights chapter or becomes a new book; only new lines; the app import path checked by parse and UI, not yet with a signed-in write) |
 | 31 | Import highlights from a Readwise or Apple Books export | apps, web | built (Readwise CSV through the Kindle path, a Readwise highlights chapter; Apple Books has no export file, so it is out) |
-| 32 | Import an EPUB or PDF you own into chapters | apps, web | built (epub.js and Ebook.swift unzip in place, a chapter per spine section; PDF in the apps by outline or ten pages at a time; web PDF waits on a PDF reader worth its size) |
+| 32 | Import an EPUB or PDF you own into chapters | apps, web | built (epub.js and Ebook.swift unzip in place, a chapter per spine section; PDF in the apps by outline or ten pages at a time; web PDF arrived in 20.1.0 with no reader library) |
 | 33 | Scan pages with the document camera in Add pages | iPhone, iPad | built (VisionKit document camera, flat cropped pages through the same reader; only on a device with a camera, so not seen in the simulator yet) |
 | 34 | Read the page text on the device before upload, so photos never leave it | apps | built (Pages: Keep the exact words reads each page with Vision on the device, accurate then fast; no upload, works with no AI quota; checked with a rendered page on the Mac) |
 | 35 | Shortcuts: add a summary, play my book, next chapter (braindump 2026-08-19) | apps | built (App Intents: Add a summary, Play or pause, Next chapter, with Siri phrases; in the built metadata; the simulator's Shortcuts app did not list them, check on a device) |
@@ -117,12 +117,11 @@ The old Road to 100 table. Rows 3 to 18 shipped as Mac 18.0.0; rows 19 to 99 are
 | 99 | Search by voice: dictate into search, on the device | apps | built (CHANGELOG 99.0.0: the keyboard mic and Mac dictation fill search; a visible mic only if people miss it) |
 
 ## Open outside the table
-- [ ] Restore Joshua's Kernel library: account and summaries missing from D1, see runs/2026-11-15-kernel-library/HANDOFF.md
 - [ ] Icon and font A+: check the icon at 16 to 32 px, and whether the seed belongs on the other dots (blocked: Joshua's eye, 2026-11-01; 16 to 32 px checked clean).
 - [ ] (11-01: narration cached in KV) Workers AI ran out of its 10,000 free daily neurons on 2026-10-28 (narration scripts, Ask, page photos and the Aura-2 fallback fail until 00:00 UTC). Workers Paid is $5 a month (Joshua's call). Then tune the meaning floor (0.6) on real bge scores.
 - [ ] (blocked: App Review, 20.0.1 iOS waiting and Mac in review 2026-11-01) French listing: Apple refused "Kernel" in fr-FR (taken). Use Noyau; the app info is locked while 19.0.0 is in review, so add it on the next version (`asc apps rename --locale fr-FR --name Noyau`).
-- [ ] Joshua's checks: Scan pages on a real iPhone (v33), Kernel's actions in the Shortcuts app (v35), Handoff between iPhone and Mac (v37), Spotlight results (v40), the signed-in Mac walk, Listen on a real phone with the screen locked, Goodreads in iOS dark mode, two devices merging highlights.
-- [ ] Summaries still to photograph or finish: the books and chapters listed in docs/summary-gaps.md (Hackers and Painters essays 4 to 14, Data Science, Agentic AI 2 to 11, The Optimist 11 to 14 and the epilogue, and the cover-only books).
+- [ ] Joshua's checks: Kernel's actions in the Shortcuts app (v35), Handoff between iPhone and Mac (v37), Spotlight results (v40), the signed-in Mac walk, Listen on a real phone with the screen locked, Goodreads in iOS dark mode, two devices merging highlights.
+- [ ] Summaries still to finish from PDFs (no more page photos): Agentic AI 1 to 11, Apple 1 to 12, Becoming Steve Jobs 1 to 10, ChatGPT 4 on, Claude AI 4 on, Data Science For Dummies 1 to 19, Exercise 1 to 2, Hackers and Painters 1 and 7 to 15, Video Game Design 10 on, plus Cracking AP Computer Science, Raw and The Man Who Solved the Market. Claude AI For Dummies still has no cover.
 
 ## Hazard
 `sync-summaries.sh` copies iCloud over the repo, it does not merge. On 2026-08-17 it replaced a full The Optimist with a shorter iCloud copy, and git was the only place four chapters still lived. After every sync run `git diff --stat` and treat a summary that got smaller as a bug, never a change to commit.
