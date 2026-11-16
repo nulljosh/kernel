@@ -12,6 +12,8 @@ The Kernel account's database went missing sometime after 2026-11-10 and was res
 
 ## Where things stand
 
+- The loop is PAUSED (stopped) until Joshua drops the PDFs in iCloud Books tomorrow. Nothing runs on its own until then.
+- The nine partial books (Agentic AI, Apple, Becoming Steve Jobs, ChatGPT, Claude AI, Data Science, Exercise, Hackers and Painters, Video Game Design) are grouped in the Incomplete collection in Joshua's library. The grouping lives in the database, not the code.
 - Repo at 20.1.0: tagged, GitHub release out, web deployed at kernel.jaybulb.com. Add a book imports a PDF or EPUB and summarizes each chapter; page photos and the document camera are gone; scanned PDFs are read on device in the apps; signing in lands on the summaries.
 - The App Store build for 20.1.0 is not submitted. Submission is Joshua's call.
 - The library is back with 34 books plus an old Accounting duplicate. Graph Algorithms has its real cover from its PDF. Claude AI For Dummies has no cover.
