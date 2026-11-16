@@ -69,6 +69,8 @@ struct LibraryView: View {
             #endif
         }
         .sheet(isPresented: $showAccount) { AccountView(auth: auth, store: store) }
+        // Signing in from the first-run pages or the Sign in button lands on your summaries, not on Settings.
+        .onChange(of: auth.isSignedIn) { was, now in if !was && now && !CommandLine.flag("UITEST_ACCOUNT") { showAccount = false } }
         .task(id: NoteTap.shared.slug) {   // a tapped reminder: open its book
             guard let s = NoteTap.shared.slug else { return }
             NoteTap.shared.slug = nil
