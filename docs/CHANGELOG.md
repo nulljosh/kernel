@@ -7,6 +7,8 @@ Every version of Kernel, newest first. Before 2026-10-28 the app was called Book
 
 
 
+## 20.1.0 (2026-11-16)
+Add a book imports a PDF or EPUB you own on the web, iPhone, iPad and Mac, and summarizes each chapter for you (or keeps it word for word if you choose). Scanned PDFs are read on the device in the apps. Page photos and the document camera are gone. Signing in now lands on your summaries instead of leaving Settings open.
 ## 20.0.1 (2026-10-30)
 A book with no cover shows its title on a plain cover, under a short amber line, on the book page and in Now Playing, instead of an empty grey box.
 ## 20.0.0 (2026-10-30)

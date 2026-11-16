@@ -66,6 +66,11 @@ enum API {
     /// A usable access token, refreshing it from the Keychain when it is missing or about to expire.
     /// Refresh tokens are single use on the server, so concurrent callers share one refresh.
     static func token() async -> String? {
+        #if DEBUG   // simulator QA on a real account: `SIMCTL_CHILD_KERNEL_QA_REFRESH=<refresh token> xcrun simctl launch ...`
+        if let seed = ProcessInfo.processInfo.environment["KERNEL_QA_REFRESH"], KeychainHelper.load(key: refreshKey) == nil {
+            KeychainHelper.save(key: refreshKey, data: Data(seed.utf8))
+        }
+        #endif
         if let access, expires.timeIntervalSinceNow > 60 { return access }
         if let refreshing { return await refreshing.value }
         let t = Task { () -> String? in
