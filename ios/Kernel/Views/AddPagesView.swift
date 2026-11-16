@@ -1,16 +1,8 @@
 import SwiftUI
-import PhotosUI
-import ImageIO
 import UniformTypeIdentifiers
-import Vision
-#if os(iOS)
-import VisionKit
-#endif
 
-/// Add a chapter from photos of the pages: each photo goes to /api/summarize-photo (same as the
-/// web's "From photos"), the text lands in an editor, Save appends it to a book or starts a new one.
-/// Photos are never kept, only the text.
-/// ponytail: picks from the photo library; an in-app camera can come when someone asks.
+/// Add a book: import a PDF or EPUB you own (summarized chapter by chapter through /api/summarize, or kept word for
+/// word), Kindle or Readwise highlights, or type a chapter into a book by hand. Photos of pages are gone (2026-11-15).
 struct AddPagesView: View {
     var store: DataStore
     @Environment(\.dismiss) private var dismiss
@@ -20,13 +12,10 @@ struct AddPagesView: View {
     init(store: DataStore, title: String = "") { self.store = store; _newTitle = State(initialValue: title) }
     @State private var chapter = ""
     @State private var text = ""
-    @State private var picks: [PhotosPickerItem] = []
-    @State private var reading: String?
     @State private var error: String?
     @State private var saving = false
     @State private var kindle = false
-    @State private var scanning = false
-    @AppStorage("kernel.pagesOnDevice") private var onDevice = false   // read on this device: the photo never leaves it
+    @AppStorage("kernel.importSummarize") private var summarize = true
     @State private var ebook = false
     @State private var importing: String?
     @State private var kindleDone: String?
@@ -35,54 +24,29 @@ struct AddPagesView: View {
         NavigationStack {
             Form {
                 Section {
+                    Toggle("Summarize each chapter", isOn: $summarize)
+                    Button { ebook = true } label: { Label(importing ?? "Import a PDF or EPUB you own", systemImage: "doc.richtext") }.disabled(importing != nil)
+                        .fileImporter(isPresented: $ebook, allowedContentTypes: [.pdf, .epub]) { r in   // its own view: two importers on one view clash
+                            guard case .success(let url) = r else { return }
+                            Task { await importBook(url) }
+                        }
+                    Button { kindle = true } label: { Label(importing ?? "Import Kindle or Readwise highlights", systemImage: "book.pages") }.disabled(importing != nil)
+                } footer: {
+                    kindleDone.map(Text.init(verbatim:)) ?? Text(summarize ? "A PDF or EPUB without DRM becomes a book, each chapter summarized. Only the summaries are kept. For highlights, choose My Clippings.txt or a Readwise CSV export." : "A PDF or EPUB without DRM becomes a book, a chapter per section, word for word. For highlights, choose My Clippings.txt or a Readwise CSV export.")
+                }
+                Section {
                     Picker("Book", selection: $book) {
                         Text("New book").tag("")
                         ForEach(store.summaryIndex) { Text($0.title).tag($0.slug) }
                     }
                     if book.isEmpty { TextField("Book title", text: $newTitle) }
                     TextField("Chapter title", text: $chapter)
-                }
-                Section {
-                    Picker("Pages", selection: $onDevice) {
-                        Text("Summarize them").tag(false)
-                        Text("Keep the exact words").tag(true)
-                    }
-                    PhotosPicker(selection: $picks, matching: .images) {
-                        Label(reading ?? "Choose page photos", systemImage: "photo.on.rectangle")
-                    }
-                    .disabled(reading != nil)
-                    #if os(iOS)
-                    if VNDocumentCameraViewController.isSupported {
-                        Button { scanning = true } label: { Label("Scan pages", systemImage: "doc.viewfinder") }.disabled(reading != nil)
-                            .fullScreenCover(isPresented: $scanning) { Scanner { pages in Task { await readScans(pages) } }.ignoresSafeArea() }
-                    }
-                    #endif
                     TextEditor(text: $text).frame(minHeight: 200).font(.kernel(.body))
                         .overlay(alignment: .topLeading) {
-                            if text.isEmpty { Text("The pages' text shows up here.").foregroundStyle(.tertiary).padding(.top, 8).padding(.leading, 5).allowsHitTesting(false) }
+                            if text.isEmpty { Text("Type or paste a chapter here.").foregroundStyle(.tertiary).padding(.top, 8).padding(.leading, 5).allowsHitTesting(false) }
                         }
                 } footer: {
-                    Text(error ?? (onDevice ? "Each page is read on this device, word for word; the photo never leaves it. Edit the text before you save." : "Each page is read and summarized, then the photo is dropped. Edit the text before you save."))
-                        .foregroundStyle(error == nil ? Color.secondary : Color.red)
-                }
-                Section {
-                    Button { ebook = true } label: { Label(importing ?? "Import an EPUB or PDF you own", systemImage: "book.closed") }.disabled(importing != nil)
-                        .fileImporter(isPresented: $ebook, allowedContentTypes: [.epub, .pdf]) { r in   // its own view: two importers on one view clash
-                            guard case .success(let url) = r else { return }
-                            let ok = url.startAccessingSecurityScopedResource(); defer { if ok { url.stopAccessingSecurityScopedResource() } }
-                            do {
-                                let book = try Ebook.markdown(url)
-                                Task {
-                                    importing = "Adding \(book.title)…"
-                                    do { try await store.addBook(title: book.title, markdown: book.markdown); kindleDone = "Added \(book.title)." }
-                                    catch { kindleDone = (error as? API.Failure)?.message ?? "Could not save that book." }
-                                    importing = nil
-                                }
-                            } catch { kindleDone = (error as? Ebook.Failure)?.message ?? "Could not read that file." }
-                        }
-                    Button { kindle = true } label: { Label(importing ?? "Import Kindle or Readwise highlights", systemImage: "book.pages") }.disabled(importing != nil)
-                } footer: {
-                    kindleDone.map(Text.init(verbatim:)) ?? Text("An EPUB without DRM or a PDF becomes a book, a chapter per section. For highlights, choose My Clippings.txt from your Kindle's documents folder, or a Readwise CSV export.")
+                    if let error { Text(error).foregroundStyle(.red) }
                 }
             }
             .fileImporter(isPresented: $kindle, allowedContentTypes: [.plainText, .text, .commaSeparatedText]) { r in
@@ -93,41 +57,30 @@ struct AddPagesView: View {
                 Task { importing = "Adding \(books.count) books…"; kindleDone = await store.importKindle(books, heading: rw == nil ? "Kindle highlights" : "Readwise highlights"); importing = nil }
             }
             .formStyle(.grouped)
-            .navigationTitle("Add pages")
+            .navigationTitle("Add a book")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { Task { await save() } }
-                        .disabled(saving || reading != nil || chapter.isEmpty || text.isEmpty || (book.isEmpty && newTitle.isEmpty))
+                        .disabled(saving || chapter.isEmpty || text.isEmpty || (book.isEmpty && newTitle.isEmpty))
                 }
             }
-            .onChange(of: picks) { _, items in Task { await read(items) } }
         }
     }
 
-    /// Pages from the document camera: already flat and cropped JPEGs, read the same way as photos.
-    private func readScans(_ pages: [Data]) async {
-        error = nil
-        for (i, jpeg) in pages.enumerated() {
-            reading = "Reading \(i + 1) of \(pages.count)…"
-            do { let page = onDevice ? try await Self.ocr(jpeg) : try await Self.summarize(jpeg); text += (text.isEmpty ? "" : "\n\n") + page }
-            catch { self.error = (error as? API.Failure)?.message ?? "Could not read a page." }
+    private func importBook(_ url: URL) async {
+        importing = "Reading \(url.lastPathComponent)…"; kindleDone = nil
+        defer { importing = nil }
+        do {
+            let ok = url.startAccessingSecurityScopedResource(); defer { if ok { url.stopAccessingSecurityScopedResource() } }
+            var b = try Ebook.markdown(url)
+            if summarize { b.markdown = try await Ebook.summarized(b.markdown) { i, n in importing = "Summarizing \(i) of \(n)…" } }
+            importing = "Adding \(b.title)…"
+            try await store.addBook(title: b.title, markdown: b.markdown)
+            kindleDone = "Added \(b.title)."
+        } catch {
+            kindleDone = (error as? Ebook.Failure)?.message ?? (error as? API.Failure)?.message ?? "Could not add that book."
         }
-        reading = nil
-    }
-
-    private func read(_ items: [PhotosPickerItem]) async {
-        guard !items.isEmpty else { return }
-        error = nil
-        for (i, item) in items.enumerated() {
-            reading = "Reading \(i + 1) of \(items.count)…"
-            guard let raw = try? await item.loadTransferable(type: Data.self), let jpeg = Self.jpeg(raw) else { error = "Could not open a photo."; continue }
-            do {
-                let page = onDevice ? try await Self.ocr(jpeg) : try await Self.summarize(jpeg)
-                text += (text.isEmpty ? "" : "\n\n") + page
-            } catch { self.error = (error as? API.Failure)?.message ?? "Could not read a photo." }
-        }
-        reading = nil; picks = []
     }
 
     private func save() async {
@@ -136,52 +89,6 @@ struct AddPagesView: View {
             try await store.addChapter(to: book.isEmpty ? nil : book, title: newTitle, chapter: chapter, text: text)
             dismiss()
         } catch { self.error = (error as? API.Failure)?.message ?? "Could not save." }
-    }
-
-    /// Photos can be 12 MB HEIC; the server takes up to 8 MB. 2000 px JPEG reads just as well.
-    static func jpeg(_ data: Data) -> Data? {
-        guard let src = CGImageSourceCreateWithData(data as CFData, nil),
-              let img = CGImageSourceCreateThumbnailAtIndex(src, 0, [kCGImageSourceCreateThumbnailFromImageAlways: true,
-                    kCGImageSourceCreateThumbnailWithTransform: true, kCGImageSourceThumbnailMaxPixelSize: 2000] as CFDictionary) else { return nil }
-        let out = NSMutableData()
-        guard let dst = CGImageDestinationCreateWithData(out, UTType.jpeg.identifier as CFString, 1, nil) else { return nil }
-        CGImageDestinationAddImage(dst, img, [kCGImageDestinationLossyCompressionQuality: 0.8] as CFDictionary)
-        return CGImageDestinationFinalize(dst) ? out as Data : nil
-    }
-
-    /// The page's own words, read on this device with Vision; nothing is uploaded. Lines join into paragraphs,
-    /// and a line ending a sentence ends one.
-    static func ocr(_ jpeg: Data) async throws -> String {
-        do { return try await ocr(jpeg, .accurate) } catch let e as API.Failure { throw e } catch { return try await ocr(jpeg, .fast) }   // accurate can fail to load its model; fast still reads print well
-    }
-    private static func ocr(_ jpeg: Data, _ level: VNRequestTextRecognitionLevel) async throws -> String {
-        try await withCheckedThrowingContinuation { done in
-            let req = VNRecognizeTextRequest { r, e in
-                let lines = (r.results as? [VNRecognizedTextObservation])?.compactMap { $0.topCandidates(1).first?.string } ?? []
-                var out = ""
-                for l in lines { out += l + (l.hasSuffix(".") || l.hasSuffix("?") || l.hasSuffix("!") || l.hasSuffix(":") ? "\n\n" : " ") }
-                let t = out.trimmingCharacters(in: .whitespacesAndNewlines)
-                if let e { done.resume(throwing: e) } else if t.isEmpty { done.resume(throwing: API.Failure(message: "No words found on that page.")) } else { done.resume(returning: t) }
-            }
-            req.recognitionLevel = level; req.usesLanguageCorrection = true
-            do { try VNImageRequestHandler(data: jpeg).perform([req]) } catch { done.resume(throwing: error) }
-        }
-    }
-
-    static func summarize(_ jpeg: Data) async throws -> String {
-        guard let token = await API.token() else { throw API.Failure(message: "Sign in first.") }
-        let boundary = UUID().uuidString
-        var body = Data("--\(boundary)\r\nContent-Disposition: form-data; name=\"image\"; filename=\"page.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n".utf8)
-        body += jpeg + Data("\r\n--\(boundary)--\r\n".utf8)
-        var req = URLRequest(url: URL(string: "https://kernel.jaybulb.com/api/summarize-photo")!)
-        req.httpMethod = "POST"; req.timeoutInterval = 60
-        req.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "content-type")
-        req.setValue("Bearer \(token)", forHTTPHeaderField: "authorization")
-        struct Out: Decodable { let text: String?; let error: String? }
-        let (data, _) = try await URLSession.shared.upload(for: req, from: body)
-        let out = try? JSONDecoder().decode(Out.self, from: data)
-        guard let t = out?.text, !t.isEmpty else { throw API.Failure(message: out?.error ?? "Could not read a photo.") }
-        return t
     }
 }
 

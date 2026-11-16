@@ -49,3 +49,62 @@ export async function epubToMarkdown(buf) {
   }
   return { title, markdown: md };
 }
+
+// ---- PDFs and summaries ----
+// pdf.js loads only when someone picks a PDF. ponytail: text PDFs only; scanned pages need the apps' on-device OCR.
+const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/';
+
+/** { title, markdown } for a PDF: a "## " per top-level outline entry, or ten pages at a time with no outline. Same as Ebook.swift. */
+export async function pdfToMarkdown(buf, name = 'Untitled') {
+  const lib = await import(PDFJS + 'pdf.min.mjs');
+  lib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.mjs';
+  const doc = await lib.getDocument({ data: buf }).promise, pages = doc.numPages;
+  const title = (await doc.getMetadata().catch(() => null))?.info?.Title?.trim() || name.replace(/\.pdf$/i, '');
+  const marks = [];
+  for (const o of (await doc.getOutline()) || []) {
+    try { const d = typeof o.dest === 'string' ? await doc.getDestination(o.dest) : o.dest; marks.push([o.title, await doc.getPageIndex(d[0])]); } catch {}
+  }
+  marks.sort((a, b) => a[1] - b[1]);
+  const parts = marks.length >= 2 ? marks.map(([t, s], i) => [t, s, i + 1 < marks.length ? marks[i + 1][1] : pages])
+    : Array.from({ length: Math.ceil(pages / 10) }, (_, i) => [`Pages ${i * 10 + 1} to ${Math.min(i * 10 + 10, pages)}`, i * 10, Math.min(i * 10 + 10, pages)]);
+  let md = `# ${title}\n`;
+  for (const [t, s, e] of parts) {
+    const txt = [];
+    for (let p = s; p < e; p++) txt.push((await (await doc.getPage(p + 1)).getTextContent()).items.map(i => i.str + (i.hasEOL ? '\n' : '')).join(''));
+    const body = txt.join('\n\n').replace(/[ \t]+/g, ' ').trim();
+    if (body.length >= 200) md += `\n## ${t}\n\n${body}\n`;
+  }
+  return { title, markdown: md };
+}
+
+/** Split text at paragraph breaks into pieces of at most `max` characters (a longer paragraph is cut hard). */
+export function chunks(text, max = 24000) {
+  const out = [''];
+  for (const p of text.split(/\n\s*\n/)) {
+    for (let i = 0; i < p.length || i === 0; i += max) {
+      const piece = p.slice(i, i + max);
+      if (out.at(-1).length + piece.length + 2 > max && out.at(-1)) out.push('');
+      out[out.length - 1] += (out.at(-1) ? '\n\n' : '') + piece;
+    }
+  }
+  return out.filter(Boolean);
+}
+
+/** The same "# Title / ## Chapter" Markdown with each chapter replaced by a summary from /api/summarize. */
+export async function summarizeMarkdown(markdown, token, progress = () => {}) {
+  const [head, ...secs] = markdown.split(/^## /m);
+  let md = head;
+  for (const [i, s] of secs.entries()) {
+    const nl = s.indexOf('\n'), name = s.slice(0, nl).trim(), body = s.slice(nl + 1);
+    progress(i + 1, secs.length, name);
+    const sums = [];
+    for (const piece of chunks(body)) {
+      const r = await fetch('/api/summarize', { method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ text: piece, title: name }) });
+      const out = await r.json().catch(() => ({}));
+      if (!out.text) throw new Error(out.error || `Could not summarize ${name}.`);
+      sums.push(out.text);
+    }
+    md += `## ${name}\n\n${sums.join('\n\n')}\n\n`;
+  }
+  return md.trimEnd() + '\n';
+}

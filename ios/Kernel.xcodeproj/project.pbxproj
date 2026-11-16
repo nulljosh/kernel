@@ -176,7 +176,6 @@
 		D63E6A6B8F231D6504401456 /* LibraryWalk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 856723BDA9B438B185F67005 /* LibraryWalk.swift */; };
 		D84D644F5D0E2C5DD531C208 /* HighlightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C24DF3A97A8C08A72C74B5 /* HighlightsView.swift */; };
 		DA3546C6E2C6AFBCAAB2387C /* Study.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5E5547CBBADD9080F8D961 /* Study.swift */; };
-		DCA4D0165C273AEA57630789 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0CECD090752E16C1C04F3 /* Scanner.swift */; };
 		DD645625E3601F018202F4DA /* Kernel.icon in Resources */ = {isa = PBXBuildFile; fileRef = 28F2279A9A1CB974E6CE26AD /* Kernel.icon */; };
 		DFF212C05C515848174AE351 /* Spotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0881CC0060AEE79428999FE2 /* Spotlight.swift */; };
 		E0A4DA0B37DD74AD292ACC79 /* data-science.md in Resources */ = {isa = PBXBuildFile; fileRef = D2CEA9519827D51461348E47 /* data-science.md */; };
@@ -200,7 +199,6 @@
 		F8C65483EE098585E3083F94 /* good-feng-shui.md in Resources */ = {isa = PBXBuildFile; fileRef = 52E50E1C377807E014AE18C2 /* good-feng-shui.md */; };
 		FD448C9A829C3DE83D0F1875 /* KernelSans-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 957C80D998A1AC994E7FD9B8 /* KernelSans-Medium.otf */; };
 		FDD2B88F7FC93EC43D72A433 /* AuthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FB1817D952E630F014265C /* AuthStore.swift */; };
-		FE285C40B276A8DDD9B5959A /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C0CECD090752E16C1C04F3 /* Scanner.swift */; };
 		FFFBDA37D66055E4D74656C7 /* KernelApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF805AA6C2148C3ABD263FF3 /* KernelApp.swift */; };
 /* End PBXBuildFile section */
 
@@ -276,7 +274,6 @@
 		0F5A656AF00C7869E464E8BA /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		0F942CD0B0198ADDFCC43A16 /* macos-tahoe.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "macos-tahoe.md"; sourceTree = "<group>"; };
 		13E196E15D2C1CEC423BA9FF /* accounting-for-canadians-for-dummies.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "accounting-for-canadians-for-dummies.md"; sourceTree = "<group>"; };
-		15C0CECD090752E16C1C04F3 /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
 		189E7CC97FD4FD19768953CA /* KernelWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KernelWatchApp.swift; sourceTree = "<group>"; };
 		1C110E896A31BA878678B4AF /* Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intents.swift; sourceTree = "<group>"; };
 		1E0CD605F7A5ED78342D424E /* KernelTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KernelTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -537,7 +534,6 @@
 				39AB081ED5D2B0F3ABE43AB8 /* NowPlaying.swift */,
 				E2296F31EB47281BF6AF3961 /* OnboardingView.swift */,
 				706C79B39012060E094ED3A4 /* PlayerBar.swift */,
-				15C0CECD090752E16C1C04F3 /* Scanner.swift */,
 				68D42622E422604FB14F1EF9 /* SplashView.swift */,
 				ED27DE465914D0C6444A386E /* StatsView.swift */,
 				F49B2AE7B1F0E5FBE8BF1790 /* StorageView.swift */,
@@ -993,7 +989,6 @@
 				6DFCDED286F1BB8996F2D68D /* Outbox.swift in Sources */,
 				46921C9C3EC73EA9A2E2A798 /* PhotoNext.swift in Sources */,
 				80BD2E4062F6A2D29CAF6B1C /* PlayerBar.swift in Sources */,
-				DCA4D0165C273AEA57630789 /* Scanner.swift in Sources */,
 				0E810C6D01FFBA5F1AD33884 /* ShareView.swift in Sources */,
 				E8033AB753A9B789DBE63EC3 /* Speaker.swift in Sources */,
 				A8CB625B3301A3A4194CAE1A /* SpeakerExtras.swift in Sources */,
@@ -1082,7 +1077,6 @@
 				669D57B6A0864203977E7B2C /* Outbox.swift in Sources */,
 				52FE0DCF9D803C435EB8FBF8 /* PhotoNext.swift in Sources */,
 				77E1E2E4FF6DE7717CF9CE3D /* PlayerBar.swift in Sources */,
-				FE285C40B276A8DDD9B5959A /* Scanner.swift in Sources */,
 				C5A43D757F591D5877D8B1FA /* Speaker.swift in Sources */,
 				79E669144557DF0527A5B485 /* SpeakerExtras.swift in Sources */,
 				B8C0EFF15FD313627FFB4073 /* SplashView.swift in Sources */,

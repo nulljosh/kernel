@@ -441,28 +441,6 @@
         }
       }
     },
-    "Add pages": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajouter des pages"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Añadir páginas"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seiten hinzufügen"
-          }
-        }
-      }
-    },
     "Add to a collection": {
       "localizations": {
         "fr": {
@@ -2333,28 +2311,6 @@
         }
       }
     },
-    "Keep the exact words": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Garder les mots exacts"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Conservar las palabras exactas"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Genaue Wortlaute behalten"
-          }
-        }
-      }
-    },
     "Kept as a book in Kernel the next time you open it.": {
       "localizations": {
         "fr": {
@@ -3587,28 +3543,6 @@
         }
       }
     },
-    "Pages": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pages"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Páginas"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seiten"
-          }
-        }
-      }
-    },
     "Password": {
       "localizations": {
         "fr": {
@@ -4331,28 +4265,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ersparnis %lld%%"
-          }
-        }
-      }
-    },
-    "Scan pages": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Numériser les pages"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escanear páginas"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seiten scannen"
           }
         }
       }
@@ -5127,28 +5039,6 @@
         }
       }
     },
-    "Summarize them": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les résumer"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Resumirlos"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sie zusammenfassen"
-          }
-        }
-      }
-    },
     "Summarize this book": {
       "localizations": {
         "fr": {
@@ -5343,28 +5233,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Das war das letzte Kapitel."
-          }
-        }
-      }
-    },
-    "The pages' text shows up here.": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le texte des pages apparaît ici."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "El texto de las páginas aparece aquí."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Der Text der Seiten erscheint hier."
           }
         }
       }
@@ -6227,28 +6095,6 @@
         }
       }
     },
-    "Photograph next": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "À photographier ensuite"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fotografiar a continuación"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Als Nächstes fotografieren"
-          }
-        }
-      }
-    },
     "Not next": {
       "localizations": {
         "fr": {
@@ -6267,6 +6113,160 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nicht als Nächstes"
+          }
+        }
+      }
+    },
+    "Add a book": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter un livre"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch hinzufügen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadir un libro"
+          }
+        }
+      }
+    },
+    "Summarize each chapter": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Résumer chaque chapitre"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jedes Kapitel zusammenfassen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resumir cada capítulo"
+          }
+        }
+      }
+    },
+    "Import a PDF or EPUB you own": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importer un PDF ou un EPUB à vous"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigenes PDF oder EPUB importieren"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importar un PDF o EPUB tuyo"
+          }
+        }
+      }
+    },
+    "Summarize next": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À résumer ensuite"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als Nächstes zusammenfassen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resumir después"
+          }
+        }
+      }
+    },
+    "Type or paste a chapter here.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tapez ou collez un chapitre ici."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapitel hier eingeben oder einfügen."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escribe o pega un capítulo aquí."
+          }
+        }
+      }
+    },
+    "A PDF or EPUB without DRM becomes a book, each chapter summarized. Only the summaries are kept. For highlights, choose My Clippings.txt or a Readwise CSV export.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un PDF ou un EPUB sans DRM devient un livre, chaque chapitre résumé. Seuls les résumés sont gardés. Pour les surlignages, choisissez My Clippings.txt ou un export CSV de Readwise."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein PDF oder EPUB ohne DRM wird zu einem Buch, jedes Kapitel zusammengefasst. Nur die Zusammenfassungen bleiben. Für Markierungen wähle My Clippings.txt oder einen Readwise-CSV-Export."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un PDF o EPUB sin DRM se convierte en un libro, con cada capítulo resumido. Solo se guardan los resúmenes. Para los subrayados, elige My Clippings.txt o una exportación CSV de Readwise."
+          }
+        }
+      }
+    },
+    "A PDF or EPUB without DRM becomes a book, a chapter per section, word for word. For highlights, choose My Clippings.txt or a Readwise CSV export.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un PDF ou un EPUB sans DRM devient un livre, un chapitre par section, mot pour mot. Pour les surlignages, choisissez My Clippings.txt ou un export CSV de Readwise."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein PDF oder EPUB ohne DRM wird zu einem Buch, ein Kapitel pro Abschnitt, Wort für Wort. Für Markierungen wähle My Clippings.txt oder einen Readwise-CSV-Export."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un PDF o EPUB sin DRM se convierte en un libro, un capítulo por sección, palabra por palabra. Para los subrayados, elige My Clippings.txt o una exportación CSV de Readwise."
           }
         }
       }

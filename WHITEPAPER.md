@@ -38,7 +38,7 @@ Every row carries its own cover. A title search alone picks the wrong book often
 
 ## Getting summaries in
 
-Photograph the pages in the app or on the web, and `/api/summarize-photo` reads each one; nothing is stored. The apps can also scan with the camera and read the pages on the device. EPUB and PDF files become a book with a chapter per section, and Kindle clippings, Readwise exports and a Goodreads export CSV come in as highlights or shelves. Joshua's own books come from photos in a private iCloud folder through the `summarize-books` skill and `scripts/import-summaries.py`.
+Import a PDF or EPUB you own, in the apps or on the web, and it becomes a book with a chapter per section. By default each chapter goes through `/api/summarize` and only the summary is kept; nothing else is stored. Scanned PDFs are read on the device in the apps. Kindle clippings, Readwise exports and a Goodreads export CSV come in as highlights or shelves. Joshua's own books come from PDFs in a private iCloud folder through the `summarize-books` skill and `scripts/import-summaries.py`.
 
 ## Goodreads
 

@@ -68,7 +68,7 @@
     <div class="stats hide" id="stats"></div>
     <p class="grimport msg" id="grImport">Bring your Goodreads shelves: export them at <a href="https://www.goodreads.com/review/import" target="_blank" rel="noopener">goodreads.com/review/import</a>, then <button type="button" class="link" id="grPick">choose the file</button>. It stays in this browser.<input type="file" id="grFile" accept=".csv,text/csv" hidden></p>
     <p class="grimport msg" id="kindleImport">Kindle or Readwise highlights: <button type="button" class="link" id="kindlePick">choose My Clippings.txt</button> from your Kindle's documents folder, or a Readwise CSV export. Each book gets a highlights chapter.<input type="file" id="kindleFile" accept=".txt,.csv,text/plain,text/csv" hidden></p>
-    <p class="grimport msg" id="epubImport">Your own ebooks: <button type="button" class="link" id="epubPick">choose an EPUB</button> without DRM and it becomes a book, a chapter per section. PDFs import in the apps.<input type="file" id="epubFile" accept=".epub,application/epub+zip" hidden></p>
+    <p class="grimport msg" id="epubImport">Your own books: <button type="button" class="link" id="epubPick">choose a PDF or EPUB</button> without DRM and it becomes a book, a chapter per section. <label><input type="checkbox" id="epubSum" checked> Summarize each chapter</label><input type="file" id="epubFile" accept=".pdf,application/pdf,.epub,application/epub+zip" hidden></p>
   </section>
 
   <!-- editor / listen -->
@@ -77,8 +77,6 @@
       <input id="title" placeholder="Book title" aria-label="Book title">
       <div class="row">
         <button id="toggle">Edit</button>
-        <button id="fromPhotos">Add pages</button>
-        <input type="file" id="photos" accept="image/*" multiple hidden>
         <button id="share">Share</button>
         <button id="download">Download</button>
         <button id="finish">Mark finished</button>
@@ -99,7 +97,6 @@
     <p id="askA" class="answer" aria-live="polite"></p>
     <p id="unlock" hidden style="font-size:14px;color:var(--muted,#8a8a8a);margin:12px 0">Natural voices are $1 on the web. Your device voice is playing. <button type="button" onclick="unlockVoices()">Unlock for $1</button></p>
     <textarea id="body" class="hide" placeholder="Chapter summaries, in markdown…" aria-label="Chapter summaries"></textarea>
-    <progress id="photoProg" hidden style="width:100%;accent-color:var(--accent)"></progress>
     <p class="msg" id="editMsg" aria-live="polite"></p>
   </section>
 </main>
@@ -120,7 +117,7 @@ import { lines as meaningLines, closest, related } from './meaning.js';
 import { card, yearCard } from './card.js';
 import { parseExport } from './goodreads-export.js';
 import { parseClippings, parseReadwise, kindleChapter } from './kindle.js';
-import { epubToMarkdown } from './epub.js';
+import { epubToMarkdown, pdfToMarkdown, summarizeMarkdown } from './epub.js';
 import * as goal from './goal.js';
 import { mergeMarks, marksMarkdown, dailyFive, catchUp } from './marks.js';
 
@@ -194,39 +191,6 @@ db.auth.onAuthStateChange((_e, session) => {
   if (session) { $('who').textContent = session.user.email; show('listView'); load(); if (location.hash.length > 1) open(location.hash.slice(1)); }
   else { show('gate'); }
 });
-
-// ---- summarize from photos ----
-// Photos never touch the database or localStorage: each one is posted straight to the API,
-// the model's summary comes back, and the file is dropped. Only the text is kept.
-$('fromPhotos').onclick = () => { render(false); $('photos').click(); };
-$('photos').onchange = async () => {
-  const files = [...$('photos').files];
-  $('photos').value = '';
-  if (!files.length) return;
-  const { data: { session } } = await db.auth.getSession();
-  const btn = $('fromPhotos'), prog = $('photoProg'), body = $('body');
-  const label = btn.textContent, texts = [], failed = [];
-  btn.disabled = true; prog.hidden = false; prog.max = files.length;
-  for (const [i, file] of files.entries()) {
-    prog.value = i;
-    btn.textContent = `Reading ${i + 1}/${files.length}…`;
-    $('editMsg').textContent = `Reading page ${i + 1} of ${files.length}.`;
-    const form = new FormData();
-    form.append('image', file);
-    const out = await fetch('/api/summarize-photo', { method: 'POST', headers: { authorization: `Bearer ${session.access_token}` }, body: form })
-      .then(r => r.json()).catch(() => ({}));
-    if (out.text) texts.push(out.text); else failed.push(i + 1);
-  }
-  prog.hidden = true; btn.textContent = label; btn.disabled = false;
-  // Nothing is saved yet: the new text lands selected in the editor, to fix before Save. Same as Add pages in the apps.
-  if (texts.length) {
-    const start = body.value.trimEnd().length + (body.value.trim() ? 2 : 0);
-    body.value = body.value.trimEnd() + (body.value.trim() ? '\n\n' : '') + texts.join('\n\n');
-    body.focus(); body.setSelectionRange(start, body.value.length);
-  }
-  const miss = failed.length ? ` Could not read page ${failed.join(', ')}.` : '';
-  $('editMsg').textContent = texts.length ? `Read ${texts.length} of ${files.length} pages.${miss} Check the new text, then Save.` : `Could not read the photos.${miss}`;
-};
 
 // ---- weekly goal: five seconds counted for every five the player plays ----
 const drawGoal = () => {
@@ -759,22 +723,28 @@ $('grPick').onclick = () => $('grFile').click();
 const norm = s => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const sameTitle = (h, t) => { const tw = new Set(t.split(' ')); return h.split(' ').every(w => tw.has(w)) || t.replace(/ /g, '').includes(h.replace(/ /g, '')); };
 $('kindlePick').onclick = () => $('kindleFile').click();
-// An EPUB you own becomes a new book; its text is read here and only the Markdown is saved.
+// A PDF or EPUB you own becomes a new book; its text is read here. Summarized, each chapter goes to /api/summarize
+// and only the summaries are saved; otherwise the text itself is.
 $('epubPick').onclick = () => $('epubFile').click();
 $('epubFile').onchange = async () => {
   const f = $('epubFile').files[0]; $('epubFile').value = '';
   if (!f) return;
+  const isPdf = /\.pdf$/i.test(f.name) || f.type === 'application/pdf';
   $('listMsg').textContent = `Reading ${f.name}…`;
   try {
-    const { title, markdown } = await epubToMarkdown(await f.arrayBuffer());
+    let { title, markdown } = isPdf ? await pdfToMarkdown(await f.arrayBuffer(), f.name) : await epubToMarkdown(await f.arrayBuffer());
     const chapters = (markdown.match(/^## /gm) || []).length;
-    if (!chapters) throw new Error('No readable text in that EPUB (it may have DRM).');
+    if (!chapters) throw new Error(isPdf ? 'No text in that PDF (it may be scanned pages; import it in the apps).' : 'No readable text in that EPUB (it may have DRM).');
+    if ($('epubSum').checked) {
+      const { data: { session } } = await db.auth.getSession();
+      markdown = await summarizeMarkdown(markdown, session.access_token, (i, n, name) => { $('listMsg').textContent = `Summarizing ${i} of ${n}: ${name}…`; });
+    }
     const { data, error } = await rows.insert(stamp(title, markdown));
     if (error) throw error;
     await load();
     $('listMsg').textContent = `Added ${title}, ${chapters} chapters.`;
     if (data?.id) open(data.id);
-  } catch (e) { $('listMsg').textContent = e.message || 'Could not read that EPUB.'; }
+  } catch (e) { $('listMsg').textContent = e.message || 'Could not read that file.'; }
 };
 $('kindleFile').onchange = async () => {
   const f = $('kindleFile').files[0]; $('kindleFile').value = '';

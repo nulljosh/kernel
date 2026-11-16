@@ -131,7 +131,7 @@ final class LibraryWalk: XCTestCase {
         saveTo("chapter-note", XCUIScreen.main.screenshot())
     }
 
-    /// Summarize this book on a Goodreads row opens Add pages with the title filled in.
+    /// Summarize this book on a Goodreads row opens Add a book with the title filled in.
     func testSummarizeFromGoodreads() {
         let app = XCUIApplication()
         app.launchArguments += ["UITEST_SNAPSHOT", "-kernel.onboarded", "YES"]
@@ -158,7 +158,7 @@ final class LibraryWalk: XCTestCase {
         saveTo("reading-stats", XCUIScreen.main.screenshot())
     }
 
-    /// Add pages offers Import Kindle or Readwise highlights, which opens the file picker (nothing is picked).
+    /// Add a book offers Import Kindle or Readwise highlights, which opens the file picker (nothing is picked).
     func testKindleImport() {
         let app = XCUIApplication()
         app.launchArguments += ["UITEST_SNAPSHOT", "-kernel.onboarded", "YES", "UITEST_SIGNED_IN"]
@@ -174,18 +174,18 @@ final class LibraryWalk: XCTestCase {
         saveTo("kindle-import", XCUIScreen.main.screenshot())
     }
 
-    /// Add pages can keep each page's exact words, read on this device, instead of summarizing on the server.
-    func testPagesOnDevice() {
+    /// Add a book can keep a PDF word for word instead of summarizing each chapter.
+    func testImportWordForWord() {
         let app = XCUIApplication()
-        app.launchArguments += ["UITEST_SNAPSHOT", "-kernel.onboarded", "YES", "-kernel.pagesOnDevice", "YES"]
+        app.launchArguments += ["UITEST_SNAPSHOT", "-kernel.onboarded", "YES", "-kernel.importSummarize", "NO"]
         app.launch()
         let row = app.staticTexts["The Man Who Solved the Market"].firstMatch
         for _ in 0..<5 where !row.exists { app.swipeUp() }
         XCTAssertTrue(row.waitForExistence(timeout: 10)); row.press(forDuration: 1.2)
         app.buttons["Summarize this book"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["Each page is read on this device, word for word; the photo never leaves it. Edit the text before you save."].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'A PDF or EPUB without DRM becomes a book, a chapter per section, word for word.'")).firstMatch.waitForExistence(timeout: 5))
         sleep(1)
-        saveTo("pages-on-device", XCUIScreen.main.screenshot())
+        saveTo("import-word-for-word", XCUIScreen.main.screenshot())
     }
 
     /// Continue my book (Siri): the library opens the book you are partway through. Silent in screenshot runs.

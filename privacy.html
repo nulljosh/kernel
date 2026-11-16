@@ -32,7 +32,7 @@ a.skip:focus { position:fixed; left:1rem; top:1rem; z-index:99; padding:0.5rem 0
 <p>Your account: an email address and a password hash, or your Sign in with Apple identity. Your summaries: their text, covers, notes, highlights, collections and where you stopped listening. That is all. There are no ads, no analytics and no tracking scripts.</p>
 
 <h2>What leaves your device, and why</h2>
-<p>To narrate a chapter, its text goes to Cloudflare Workers AI and the lines to ElevenLabs or Cloudflare for the voice. Narrated lines are stored so a chapter you played is free to replay. Photos of pages go to Workers AI to be read and are dropped once the text is back. A question you ask a chapter goes to Workers AI with that chapter. None of these services is told who you are.</p>
+<p>To narrate a chapter, its text goes to Cloudflare Workers AI and the lines to ElevenLabs or Cloudflare for the voice. Narrated lines are stored so a chapter you played is free to replay. When you import a PDF or EPUB and choose to summarize it, each chapter's text goes to Workers AI and is dropped once the summary is back; the file itself never leaves your device. A question you ask a chapter goes to Workers AI with that chapter. None of these services is told who you are.</p>
 
 <h2>What stays on your device</h2>
 <p>Your Goodreads sign-in and shelves, your error log, downloaded narration, book covers and your search index stay on the device that made them. Kernel never sees your Goodreads login.</p>

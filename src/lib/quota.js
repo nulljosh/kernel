@@ -1,7 +1,7 @@
 // An hourly cap per person (by IP) on the routes that call a model or another site, so one caller cannot run
 // up the Workers AI bill or get Goodreads to block us. Counted in the edge cache: free, and no KV writes.
 // ponytail: per data centre and not atomic, so a burst can slip a few over; it is a brake, not a meter.
-export const CAPS = { narrate: 120, ask: 60, embed: 600, photo: 120, goodreads: 60 };
+export const CAPS = { narrate: 120, ask: 60, embed: 600, summarize: 240, goodreads: 60 };
 
 export async function tooMany(request, route, cache = globalThis.caches?.default, now = Date.now()) {
   if (!cache) return false;

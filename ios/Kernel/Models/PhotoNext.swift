@@ -1,6 +1,6 @@
 import Foundation
 
-/// "Photograph next": books from your Goodreads shelves you mean to summarize, marked so the read list doubles as
+/// "Summarize next": books from your Goodreads shelves you mean to summarize, marked so the read list doubles as
 /// the summary queue (#81). Marked books sort to the top of their shelf.
 /// ponytail: kept on this device only; move it to the account when two devices need the same queue.
 @MainActor @Observable

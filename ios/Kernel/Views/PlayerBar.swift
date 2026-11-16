@@ -92,13 +92,13 @@ struct GoodreadsRow: View {
             .contextMenu {
                 if store != nil {
                     Button("Summarize this book", systemImage: "doc.badge.plus") { summarizing = true }
-                    Button(next ? "Not next" : "Photograph next", systemImage: next ? "camera.badge.ellipsis" : "camera") { PhotoNext.shared.toggle(book.id) }
+                    Button(next ? "Not next" : "Summarize next", systemImage: next ? "bookmark.slash" : "bookmark") { PhotoNext.shared.toggle(book.id) }
                 }
             }
             .swipeActions {
                 if store != nil {
                     Button("Summarize", systemImage: "doc.badge.plus") { summarizing = true }.tint(amber)
-                    Button(next ? "Not next" : "Next", systemImage: "camera") { PhotoNext.shared.toggle(book.id) }
+                    Button(next ? "Not next" : "Next", systemImage: "bookmark") { PhotoNext.shared.toggle(book.id) }
                 }
             }
             .sheet(isPresented: $summarizing) { if let store { AddPagesView(store: store, title: book.title) } }
@@ -110,7 +110,7 @@ struct GoodreadsRow: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(book.title).font(.kernel(.body)).lineLimit(2)
                 Text(book.author).font(.kernel(.footnote)).foregroundStyle(.secondary).lineLimit(1)
-                if next { Label("Photograph next", systemImage: "camera").font(.kernel(.caption, weight: .semibold)).foregroundStyle(amber) }
+                if next { Label("Summarize next", systemImage: "bookmark").font(.kernel(.caption, weight: .semibold)).foregroundStyle(amber) }
                 // Currently reading: the latest Goodreads progress. Read: the start of your review.
                 if let p = book.progress {
                     ProgressView(value: Double(p), total: 100).tint(amber).padding(.top, 2)

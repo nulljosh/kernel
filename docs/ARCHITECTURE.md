@@ -2,7 +2,7 @@
 
 ![How Kernel fits together](../architecture.svg)
 
-Your summaries live in one table on jaybulb-api (api.jaybulb.com, a Cloudflare Worker on D1). The web, iPhone, iPad and Mac all sign in there and read the same rows. Everything that costs money or needs a key (the narrator, the voices, page photos, Ask, payments) runs as Pages Functions beside the website at kernel.jaybulb.com. Goodreads is read on your own device and never touches either server. The rules every platform shares are in [CLAUDE.md](../CLAUDE.md).
+Your summaries live in one table on jaybulb-api (api.jaybulb.com, a Cloudflare Worker on D1). The web, iPhone, iPad and Mac all sign in there and read the same rows. Everything that costs money or needs a key (the narrator, the voices, book summaries, Ask, payments) runs as Pages Functions beside the website at kernel.jaybulb.com. Goodreads is read on your own device and never touches either server. The rules every platform shares are in [CLAUDE.md](../CLAUDE.md).
 
 ## Web
 
@@ -37,7 +37,7 @@ One SwiftUI codebase builds `Kernel` (iPhone and iPad) and `KernelMac` from `ios
 | `Views/LibraryView.swift` | The library: Continue card, search, Goodreads shelves; split view on iPad, three columns on the Mac |
 | `Views/SummaryDetailView.swift` | A book's chapters and the chapter reader with the word that follows the voice |
 | `Views/PlayerBar.swift`, `Views/NowPlaying.swift` | The mini player and the full player sheet |
-| `Views/AddPagesView.swift`, `Views/AskView.swift` | A chapter from page photos; one question to a chapter |
+| `Views/AddPagesView.swift`, `Views/AskView.swift` | Import a PDF or EPUB (summarized or word for word), or type a chapter; one question to a chapter |
 | `Views/AccountView.swift` | Sign in, Goodreads, goal, voice meter, export, delete account |
 | `Views/SplashView.swift`, `Views/OnboardingView.swift` | Launch splash and first-run pages |
 | `Models/API.swift`, `Models/AuthStore.swift`, `Models/KeychainHelper.swift` | jaybulb-api rows and sign-in, tokens in the data-protection keychain |
@@ -52,7 +52,7 @@ All paths above are under `ios/Kernel/` unless they say otherwise.
 
 ## Limits
 
-Every route that calls a model or another site is capped per person (by IP) per hour in `src/lib/quota.js`: narrate 120, ask 60, embed 600, summarize-photo 120, goodreads 60, then a 429. The counts live in the edge cache, so they cost nothing and write no KV. The natural voices keep their own daily and monthly character budgets in KV (`speak.js`). Narrate, ask, embed and summarize-photo also need a sign-in or a share token; the Stripe webhook checks its signature. Every page is served with `_headers`: no framing, no plugins, HSTS, and no camera, microphone or location. Page text from users is escaped before it is written as HTML, and avatars load only as images.
+Every route that calls a model or another site is capped per person (by IP) per hour in `src/lib/quota.js`: narrate 120, ask 60, embed 600, summarize 240, goodreads 60, then a 429. The counts live in the edge cache, so they cost nothing and write no KV. The natural voices keep their own daily and monthly character budgets in KV (`speak.js`). Narrate, ask, embed and summarize also need a sign-in or a share token; the Stripe webhook checks its signature. Every page is served with `_headers`: no framing, no plugins, HSTS, and no camera, microphone or location. Page text from users is escaped before it is written as HTML, and avatars load only as images.
 
 ## Startup budget
 
@@ -91,7 +91,7 @@ The web numbers come from a headless walk with mocked data; the iPhone ones from
 | `functions/api/narrate.js` | Turns a chapter into a one-narrator script (Workers AI, Llama 3.3), cached on the row |
 | `functions/api/speak.js` | One line in a natural voice with word timings: ElevenLabs, then Cloudflare Aura-2, then the device voice. Every line stored for good in KV, with monthly and daily caps |
 | `functions/api/ask.js` | Answers a question from one chapter's notes, metered like the voices |
-| `functions/api/summarize-photo.js` | Reads a photographed page, nothing stored |
+| `functions/api/summarize.js` | Summarizes one part of an imported PDF or EPUB, nothing stored |
 | `functions/api/embed.js` | Embeds paragraphs for search by meaning (Workers AI, bge-small) |
 | `functions/api/forget.js` | Clears an account's voice counters, $1 record and stored narration before it is deleted |
 | `functions/share.js` | The book's title and cover in a share link's preview; indexable only with a public profile |

@@ -31,7 +31,6 @@ targets:
         CFBundleDisplayName: Kernel
         CFBundleName: Kernel
         NSFaceIDUsageDescription: Sign in faster with Face ID.
-        NSCameraUsageDescription: Scan book pages into a chapter. The pages are read and dropped, never kept.
         NSUserActivityTypes: [com.heyitsmejosh.spine.reading]
         UIApplicationSceneManifest:   # iPad Stage Manager and Split View: more than one window; and the CarPlay scene
           UIApplicationSupportsMultipleScenes: true

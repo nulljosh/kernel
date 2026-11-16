@@ -153,7 +153,7 @@ struct LibraryView: View {
     private var accountButton: some ToolbarContent {
         if auth.isSignedIn {
             ToolbarItem(placement: .automatic) {
-                Button("Add pages", systemImage: "plus") { showAddPages = true }
+                Button("Add a book", systemImage: "plus") { showAddPages = true }
             }
         }
         if store.summaryIndex.count > 1 {

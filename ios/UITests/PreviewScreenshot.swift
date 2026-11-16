@@ -178,15 +178,15 @@ final class PreviewScreenshot: XCTestCase {
         saveTo("offline-book", XCUIScreen.main.screenshot())
     }
 
-    /// The Add pages sheet from the library's + button. Picks no photos (that needs a real account).
+    /// The Add a book sheet from the library's + button. Imports nothing (that needs a real account).
     func testAddPages() {
         let app = XCUIApplication()
         app.launchArguments += ["-kernel.onboarded", "YES", "UITEST_SNAPSHOT"]
         app.launch()
-        let add = app.buttons["Add pages"].firstMatch
-        XCTAssertTrue(add.waitForExistence(timeout: 15), "signed in, the library offers Add pages")
+        let add = app.buttons["Add a book"].firstMatch
+        XCTAssertTrue(add.waitForExistence(timeout: 15), "signed in, the library offers Add a book")
         add.tap()
-        XCTAssertTrue(app.buttons["Choose page photos"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Import a PDF or EPUB you own"].firstMatch.waitForExistence(timeout: 5))
         sleep(1)
         saveTo("add-pages", XCUIScreen.main.screenshot())
     }

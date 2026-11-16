@@ -1,9 +1,11 @@
 import Foundation
 import PDFKit
 import Compression
+import Vision
 
 /// An EPUB (no DRM) or PDF you own becomes a book: "# Title", then "## " per section. Same EPUB rules as epub.js;
-/// a PDF uses its outline for chapters, or ten pages at a time when it has none.
+/// a PDF uses its outline for chapters, or ten pages at a time when it has none. A page with no text layer (a scan)
+/// is read on this device with Vision. `summarized` swaps each chapter for a summary from /api/summarize.
 /// ponytail: plain text only; images and tables are dropped.
 enum Ebook {
     struct Failure: Error { let message: String }
@@ -16,7 +18,7 @@ enum Ebook {
     static func pdf(_ url: URL) throws -> (title: String, markdown: String) {
         guard let doc = PDFDocument(url: url), doc.pageCount > 0 else { throw Failure(message: "Could not open that PDF.") }
         let title = (doc.documentAttributes?[PDFDocumentAttribute.titleAttribute] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? url.deletingPathExtension().lastPathComponent
-        let text = { (r: Range<Int>) in r.compactMap { doc.page(at: $0)?.string }.joined(separator: "\n\n").replacingOccurrences(of: "[ \\t]+", with: " ", options: .regularExpression) }
+        let text = { (r: Range<Int>) in r.compactMap { doc.page(at: $0).map(pageText) }.joined(separator: "\n\n").replacingOccurrences(of: "[ \\t]+", with: " ", options: .regularExpression) }
         var parts: [(String, Range<Int>)] = []
         let marks = (0..<(doc.outlineRoot?.numberOfChildren ?? 0)).compactMap { doc.outlineRoot?.child(at: $0) }
             .compactMap { o in o.destination?.page.map { (o.label ?? "", doc.index(for: $0)) } }.sorted { $0.1 < $1.1 }
@@ -27,8 +29,63 @@ enum Ebook {
         }
         var md = "# \(title)\n"
         for (name, r) in parts where !r.isEmpty { let t = text(r).trimmingCharacters(in: .whitespacesAndNewlines); if t.count >= 200 { md += "\n## \(name)\n\n\(t)\n" } }
-        guard md.contains("\n## ") else { throw Failure(message: "No text in that PDF (it may be scanned pages; use Choose page photos).") }
+        guard md.contains("\n## ") else { throw Failure(message: "No readable text in that PDF.") }
         return (title, md)
+    }
+
+    /// A page's text layer, or for a scanned page its words read on this device. ponytail: accurate level only.
+    static func pageText(_ page: PDFPage) -> String {
+        if let s = page.string, s.trimmingCharacters(in: .whitespacesAndNewlines).count > 20 { return s }
+        let size = page.bounds(for: .mediaBox).size, scale = 2000 / max(size.width, size.height, 1)
+        guard let img = page.thumbnail(of: CGSize(width: size.width * scale, height: size.height * scale), for: .mediaBox).cg else { return "" }
+        let req = VNRecognizeTextRequest(); req.recognitionLevel = .accurate; req.usesLanguageCorrection = true
+        try? VNImageRequestHandler(cgImage: img).perform([req])
+        var out = ""
+        for l in (req.results ?? []).compactMap({ $0.topCandidates(1).first?.string }) { out += l + (".?!:".contains(l.last ?? " ") ? "\n\n" : " ") }
+        return out
+    }
+
+    // MARK: Summaries
+    /// Split at paragraph breaks into pieces the server takes (24,000 characters); a longer paragraph is cut hard.
+    static func chunks(_ text: String, max: Int = 24000) -> [String] {
+        var out = [""]
+        for p in text.components(separatedBy: "\n\n") {
+            var rest = Substring(p)
+            repeat {
+                let piece = rest.prefix(max); rest = rest.dropFirst(piece.count)
+                if !out[out.count - 1].isEmpty && out[out.count - 1].count + piece.count + 2 > max { out.append("") }
+                out[out.count - 1] += (out[out.count - 1].isEmpty ? "" : "\n\n") + piece
+            } while !rest.isEmpty
+        }
+        return out.filter { !$0.isEmpty }
+    }
+
+    /// The same "# Title / ## Chapter" Markdown with each chapter's text replaced by its summary. Same as epub.js.
+    static func summarized(_ markdown: String, progress: (Int, Int) -> Void) async throws -> String {
+        let secs = markdown.components(separatedBy: "\n## ")
+        var md = secs[0].trimmingCharacters(in: .whitespacesAndNewlines) + "\n"
+        for (i, s) in secs.dropFirst().enumerated() {
+            progress(i + 1, secs.count - 1)
+            let name = String(s.prefix { $0 != "\n" }), body = String(s.dropFirst(name.count))
+            var sums: [String] = []
+            for piece in chunks(body.trimmingCharacters(in: .whitespacesAndNewlines)) { sums.append(try await summarize(piece, title: name)) }
+            md += "\n## \(name)\n\n\(sums.joined(separator: "\n\n"))\n"
+        }
+        return md
+    }
+
+    static func summarize(_ text: String, title: String) async throws -> String {
+        guard let token = await API.token() else { throw API.Failure(message: "Sign in first.") }
+        var req = URLRequest(url: URL(string: "https://kernel.jaybulb.com/api/summarize")!)
+        req.httpMethod = "POST"; req.timeoutInterval = 120
+        req.setValue("application/json", forHTTPHeaderField: "content-type")
+        req.setValue("Bearer \(token)", forHTTPHeaderField: "authorization")
+        req.httpBody = try JSONEncoder().encode(["text": text, "title": title])
+        struct Out: Decodable { let text: String?; let error: String? }
+        let (data, _) = try await URLSession.shared.data(for: req)
+        let out = try? JSONDecoder().decode(Out.self, from: data)
+        guard let t = out?.text, !t.isEmpty else { throw API.Failure(message: out?.error ?? "Could not summarize \(title).") }
+        return t
     }
 
     // MARK: EPUB
@@ -102,3 +159,9 @@ extension DataStore {
         await loadSummaries()
     }
 }
+
+#if os(iOS)
+private extension UIImage { var cg: CGImage? { cgImage } }
+#else
+private extension NSImage { var cg: CGImage? { cgImage(forProposedRect: nil, context: nil, hints: nil) } }
+#endif

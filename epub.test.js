@@ -36,3 +36,12 @@ test('epubToMarkdown follows the spine and skips the cover', async () => {
   assert.match(markdown, /\n## Section 1\n\nThis paragraph/);
   assert.doesNotMatch(markdown, /Cover/);
 });
+
+test('chunks splits at paragraphs and never goes over the cap', async () => {
+  const { chunks } = await import('./epub.js');
+  const text = Array.from({ length: 50 }, (_, i) => `Paragraph ${i} `.repeat(20)).join('\n\n');
+  const out = chunks(text, 1000);
+  assert.ok(out.length > 1 && out.every(c => c.length <= 1000));
+  assert.equal(out.join('\n\n').replace(/\s+/g, ''), text.replace(/\s+/g, ''));
+  assert.ok(chunks('x'.repeat(2500), 1000).every(c => c.length <= 1000));
+});

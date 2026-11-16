@@ -15,7 +15,7 @@ Free on the [web](https://kernel.jaybulb.com), $0.99 on iPhone, iPad and Mac. Fo
 - **Highlights and questions.** Save a line, or ask the chapter something.
 - **Goodreads.** Your shelves show up next to your summaries.
 - **Search.** Find words inside your chapters, or ideas close in meaning.
-- **Bring your books.** Photos of pages, EPUB and PDF, Kindle and Readwise highlights.
+- **Bring your books.** A PDF or EPUB you own becomes chapter summaries. Kindle and Readwise highlights too.
 - **Four languages.** English, French, Spanish and German, narration included.
 - **Read your way.** Light, dark, sepia or true black; your place is saved whether you listen or read.
 - **Offline.** Your books stay on the device, the apps download the audio, and saves made offline go up later.
