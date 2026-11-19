@@ -140,3 +140,9 @@ History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in 
 - [ ] (Note "Kernel") Taking photos of every page is super impractical. PDF and EPUB import already ship (row 32). Still open from the note: Google Drive import for existing PDFs, Kindle / Readwise highlights import, camera scanning as backup only. Must work without API keys.
 - [ ] (Note "Kernel") A skill that finds EPUBs or PDFs for the books already summarized, plus any list we give it, and also takes a link or file directly. Extends `summarize-books`? Question: only legally free sources (Gutenberg, Standard Ebooks, Internet Archive), or files Joshua owns?
 - [ ] (Note "Kernel") Copy the UI and UX of this book tracking app: "Book Tracker" home with colored count tiles (All, Library, Wishlist, Not Owned, Statistics, Quotes), a pages-read / minutes-listened chart, reading statuses list (Unread, To read, Reading, Read, Not finished), floating + button. Screenshot: ~/Documents/Code/notes/attachments/2026-11-14/kernel-1.png
+
+## Ingested 2026-11-18
+- [ ] We got the ChatGPT for Dummies PDF.
+- [ ] Summarize-books skill should delete the HEIC scans of a book once we have a PDF.
+- [ ] Find PDFs for missing books and patch missing cover thumbnails (Claude AI for Dummies has no cover, notes/attachments/2026-11-18/22283-1.png).
+- [ ] Needs Zero to One (Peter Thiel). We bought it on Apple Books.
