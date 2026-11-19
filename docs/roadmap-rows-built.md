@@ -1,0 +1,103 @@
+## Rows built (2026-10-28 to 10-30)
+The old Road to 100 table. Rows 3 to 18 shipped as Mac 18.0.0; rows 19 to 99 are 18.1.0 (they were tagged one major each by mistake; those tags are gone). Rows 67 and 93 still wait on the store and Workers AI.
+
+| Row | What | Where | Status |
+|---|---|---|---|
+| 3 | Gap rows 1 to 5: minutes, Continue card, line skip, speed presets, sleep timer; resume fix | apps, web | built |
+| 4 | Gap rows 6 to 10: highlights, offline audio, add pages, ask the chapter, weekly goal; Goodreads sign-in; book avatars; review fixes | apps, web | built |
+| 5 | A big Play / Continue button on the book page (A1) | apps, web | built |
+| 6 | Now Playing sheet: big cover, time left, line skip, speed, sleep, chapters (A2) | apps (the web reader already is one) | built |
+| 7 | Reader text size and line spacing (A3) | apps, web | built |
+| 8 | Goal streak dots under the ring (A4), weekly goal on the web | apps, web | built |
+| 9 | Highlights merge across devices instead of last writer wins (review item a) | apps, web | built (three-way merge on save: marks.js and ListenState.merge) |
+| 10 | `updated_at` moves only on content edits, in jaybulb-api (review b); one listen stylesheet (review c) | api, web | built (jaybulb-api `touch: ["content"]`, listen.css) |
+| 11 | iPad pass: reading column, split view, screenshots | iPad | built (two-column split view on regular width, testIPad) |
+| 12 | Mac store screenshots at 2880x1800, signed-in Mac walk | Mac | built (6 shots in ios/fastlane/screenshots/mac, captured at 1440x900 on a 1080p screen and scaled 2x; attach to the next version; signed-in walk is Joshua's step) |
+| 13 | Icon and Kernel Sans A+ at small sizes | all | built (16 px icon and favicon redrawn bolder: brand/icon-small.svg; small labels secondary not tertiary; Mac footnote 11 pt) |
+| 14 | Cold launch: Release build timing, no white flash | apps | built (Release launch about 3 s in the simulator, Settings 3.6 s; splash follows the app theme from frame one; nav titles get Kernel Sans; iOS launch screen still follows the phone) |
+| 15 | Web offline mode: the shelf and chapters work with no connection | web | built |
+| 16 | Web offline audio: Download on the web book page | web | built (every line heard or downloaded is kept on the device; Download fetches the rest) |
+| 17 | Web Add pages parity: per-photo progress, edit before save | web | built (Add pages button, progress bar, failed pages named, new text selected in the editor until Save) |
+| 18 | Search inside chapter text, results jump to the line | apps, web | built (matching line under each result; the book opens on the notes at that line, marked; testSearch) |
+| 19 | Collections: put books in your own groups | apps, web | built (one collection per book, a `collection` column on jaybulb-api; library groups A to Z, then Library; testCollections) |
+| 20 | Sort and filter the library (recent, title, progress, length) | apps, web | built (Recently edited, Title, Progress, Shortest first; All, In progress, Not started; kept per device; testSortFilter) |
+| 21 | Search by meaning: find an idea even when the words differ, no chat | apps, web | built (bge-small through /api/embed, vectors kept per book version in Cache Storage and Application Support; Apple NLEmbedding and NLContextualEmbedding were tried and ranked the right line last; UI checked with a stand-in embedder, the 0.6 floor still to tune on the real model) |
+| 22 | All highlights in one place; share a highlight as an image card | apps, web | built (Highlights button on the library, a 1080 gold card from card.js and HighlightCard; the app card is rendered only when shared, not yet seen in a shot) |
+| 23 | Export highlights and notes as Markdown | apps, web | built (highlights, by book and chapter: marksMarkdown and exportMarkdown; notes join when row 29 lands) |
+| 24 | Daily review: five highlights resurface on a schedule | apps, web | built (Today's five on the library, the same five on every device by FNV of the day, Done until tomorrow; a daily shuffle, not spaced repetition) |
+| 25 | Your own note under any chapter | apps, web | built (a `notes` JSON column on jaybulb-api, not in listen, so old builds cannot drop it; in the export too) |
+| 26 | "Summarize this" on a Goodreads read book opens Add pages with the title filled in | apps | built (long-press or swipe a Goodreads row; testSummarizeFromGoodreads) |
+| 27 | Reading stats: books per year, pages, average rating (Goodreads plus Kernel) | apps, web | built (Your reading under the library: books, chapters, hours, highlights, notes; the apps add Goodreads books finished per year and the average rating; pages wait on page counts from Goodreads) |
+| 28 | Year in review | apps, web | built (Share your 2026 under Your reading: a gold card with the year, books finished and summarized, highlights, hours and one highlight; yearCard and YearCard) |
+| 29 | Goodreads on the web through your Goodreads export file | web | built (goodreads-export.js parses the CSV in the browser, kept per account in localStorage, cleared on sign-out; never sent to the server) |
+| 30 | Import Kindle highlights (My Clippings.txt) | apps, web | built (kindle.js and Kindle.swift; each book gets a Kindle highlights chapter or becomes a new book; only new lines; the app import path checked by parse and UI, not yet with a signed-in write) |
+| 31 | Import highlights from a Readwise or Apple Books export | apps, web | built (Readwise CSV through the Kindle path, a Readwise highlights chapter; Apple Books has no export file, so it is out) |
+| 32 | Import an EPUB or PDF you own into chapters | apps, web | built (epub.js and Ebook.swift unzip in place, a chapter per spine section; PDF in the apps by outline or ten pages at a time; web PDF arrived in 20.1.0 with no reader library) |
+| 33 | Scan pages with the document camera in Add pages | iPhone, iPad | built (VisionKit document camera, flat cropped pages through the same reader; only on a device with a camera, so not seen in the simulator yet) |
+| 34 | Read the page text on the device before upload, so photos never leave it | apps | built (Pages: Keep the exact words reads each page with Vision on the device, accurate then fast; no upload, works with no AI quota; checked with a rendered page on the Mac) |
+| 35 | Shortcuts: add a summary, play my book, next chapter (braindump 2026-08-19) | apps | built (App Intents: Add a summary, Play or pause, Next chapter, with Siri phrases; in the built metadata; the simulator's Shortcuts app did not list them, check on a device) |
+| 36 | Siri: "continue my book" | apps | built (ContinueBookIntent opens the book you are partway through and plays it; testContinueMyBook with a silent stand-in) |
+| 37 | Handoff: pick up the same chapter on the Mac | apps | built (NSUserActivity on the book page, web library link for devices without the app; needs two devices to see) |
+| 38 | Mac menu bar mini player | Mac | built (MenuBarExtra while a book is loaded: chapter, play or pause, a line back or forward, next chapter; shots from -UITEST_MENUBAR_SHOT) |
+| 39 | Mac keyboard map and a command palette | Mac | built (a Listen menu holds every listening shortcut; ⌘K finds a book or action; works from an iPad keyboard too; shot on iPhone, the Mac sheet not yet seen) |
+| 40 | Spotlight finds your summaries and highlights | apps | built (CoreSpotlight index rebuilt when the library loads, books and highlights, a result opens its book; the simulator's Home Screen search did not show it, check on a device) |
+| 41 | API and MCP routes to create, read and update summaries (braindump 2026-08-19) | api | built (/api/summaries GET, POST, PATCH and four MCP tools, your token passed through to jaybulb-api; live 401 without one) |
+| 42 | Pick the narrator voice, per book | apps, web | built (Alice or George, remembered per book like speed; voices.js split from listen.js; the Aura fallback stays one voice) |
+| 43 | Download the next chapter's audio on Wi-Fi ahead of time | apps | built (while a chapter plays on Wi-Fi, not cellular or Low Data Mode, the next one's lines are fetched and kept with the book; no visible change, so build-checked) |
+| 44 | Storage screen: what is downloaded, how big, remove it | apps | built (CHANGELOG 44.0.0) |
+| 45 | Sleep timer fades out; shake to add ten minutes | iPhone | built (CHANGELOG 45.0.0) |
+| 46 | Accessibility: VoiceOver on every screen, largest text sizes, Reduce Motion | apps, web | built (CHANGELOG 46.0.0) |
+| 47 | Languages: French, Spanish and German interface | apps, web | built (CHANGELOG 47.0.0) |
+| 48 | Narrate a chapter in your own language | apps, web | built; not heard live (CHANGELOG 48.0.0) |
+| 49 | Localized screenshots and listings | store | built; goes up with the next version (CHANGELOG 49.0.0) |
+| 50 | First-run pages offer the Goodreads sign-in | apps | built (CHANGELOG 50.0.0) |
+| 51 | Empty states and error messages A+ on every screen | apps, web | built (CHANGELOG 51.0.0) |
+| 52 | Account reorganized: Listening, Goodreads, Notifications, Data | apps, web | built (CHANGELOG 52.0.0) |
+| 53 | Notifications: weekly recap, quiet hours | apps | built (CHANGELOG 53.0.0) |
+| 54 | Public profile: the shelf and highlights you choose to share | web | built; live once Joshua deploys jaybulb-api (CHANGELOG 54.0.0) |
+| 55 | Share links with cover preview cards | web | built (CHANGELOG 55.0.0) |
+| 56 | Landing refresh with real app screens and the Goodreads story | web | built (CHANGELOG 56.0.0) |
+| 57 | Opt-in public pages for shared summaries | web | built; live once Joshua deploys jaybulb-api (CHANGELOG 57.0.0) |
+| 58 | 500-book library stays smooth (Goodreads scale) | apps, web | built (CHANGELOG 58.0.0) |
+| 59 | Covers cached on disk | apps | built (CHANGELOG 59.0.0) |
+| 60 | Startup time budget with an Instruments pass | apps | built (CHANGELOG 60.0.0) |
+| 61 | On-device error log you can export when something breaks | apps | built (CHANGELOG 61.0.0) |
+| 62 | Retry with backoff on every network call; saves queue while offline | apps, web | built (CHANGELOG 62.0.0) |
+| 63 | Listen position merges across devices by time | apps, web | built (CHANGELOG 63.0.0) |
+| 64 | Security sweep: auth, rate limits on every model route, KV caps | api | built (CHANGELOG 64.0.0; caps in docs/ARCHITECTURE.md) |
+| 65 | Export everything you have as one file | apps, web | built (CHANGELOG 65.0.0) |
+| 66 | Account deletion also clears usage counters and audio caches | api, apps | built (CHANGELOG 66.0.0) |
+| 67 | Retire `viaApp`, the Supabase fallback and the Supabase project (once 1.2.x is gone) | api | waits: iPhone 1.2.1 is still the live version (2.0.0 in review) |
+| 68 | kernel.jaybulb.com and the repo rename | web, repo | built (CHANGELOG 68.0.0; kernel.jaybulb.com live 2026-10-29) |
+| 69 | Swift unit tests (parsers, goal, nudges) run in CI | apps | built (CHANGELOG 69.0.0) |
+| 70 | Simulator UI walks run in CI | apps | built (CHANGELOG 70.0.0; the walk step is non-blocking until its first green run) |
+| 71 | Docs to 100 percent | repo | built (CHANGELOG 71.0.0) |
+| 72 | Web polish pass to match the apps (apple skill) | web | built (CHANGELOG 72.0.0) |
+| 73 | Web keyboard shortcuts and a focus mode | web | built (CHANGELOG 73.0.0) |
+| 74 | Read mode: page by page without audio, position saved | apps, web | built (CHANGELOG 74.0.0; the apps need iOS 18 or macOS 15 for it) |
+| 75 | Kernel Sans italic and bold for quotes | all | built (CHANGELOG 75.0.0) |
+| 76 | Sepia reading theme | apps, web | built (CHANGELOG 76.0.0) |
+| 77 | True black for OLED | apps | built (CHANGELOG 77.0.0) |
+| 78 | iPad: Stage Manager windows, Pencil highlights | iPad | built (CHANGELOG 78.0.0; Pencil needs a real iPad to try) |
+| 79 | Mac: one window per book | Mac | built (CHANGELOG 79.0.0; build-checked, Joshua to try it: right-click a book) |
+| 80 | Promotional text and in-app events each release | store | built (CHANGELOG 80.0.0; first run with the next live version, since today's promo text names features 1.2.1 lacks) |
+| 81 | Two screenshot sets tested on the product page | store | built (CHANGELOG 81.0.0; the test starts once the version in the shots is on sale) |
+| 82 | Second Mobbin pass against the best apps; close what is left | all | built (CHANGELOG 82.0.0: against Blinkist, Shortform, Readwise Reader and Headway; what is left is key ideas, exercises and a coach, rows 95 to 98 on Workers AI) |
+| 83 | apple skill audit of every screen, zero findings | all | built (CHANGELOG 83.0.0; Kernel Sans stays, it was Joshua's brief, and sepia stays as a reading choice) |
+| 84 | Security and privacy audit, zero findings | all | built (CHANGELOG 84.0.0) |
+| 85 | Performance audit, zero regressions | all | built (CHANGELOG 85.0.0; the table is in docs/ARCHITECTURE.md) |
+| 86 | Docs, README, WHITEPAPER and landing final pass | repo, web | built (CHANGELOG 86.0.0) |
+| 87 | Release candidate: every row above on iPhone, iPad, Mac and web | all | built (CHANGELOG 87.0.0: iPhone 31 of 31 tests, iPad unit tests and six walks, Mac Release build, web 50 tests and every live page) |
+| 88 | Home Screen widgets: Continue and the weekly ring | iPhone, iPad, Mac | built (CHANGELOG 88.0.0; the Mac widget came with 90) |
+| 89 | Lock Screen widget and a Live Activity while listening | iPhone | built (CHANGELOG 89.0.0; the Live Activity itself shows only on a real device or a signed build) |
+| 90 | Control Center control for the current book | iPhone, Mac | built (CHANGELOG 90.0.0; iOS 18 and macOS 26 for the control) |
+| 91 | CarPlay audio | iPhone | built (CHANGELOG 91.0.0; inert until Apple grants com.apple.developer.carplay-audio, then add it to Kernel.entitlements) |
+| 92 | Share extension: save text or a web article as a summary | apps | built (CHANGELOG 92.0.0; iPhone and iPad; the extension itself shows only in a signed build) |
+| 93 | Narrator quality: an eval set of chapters, prompt tuned against it | api | eval built (`node narrate-eval.mjs`, nine chapters, seven rules); tuning waits on Workers AI, 0 of 9 while it answers 502 |
+| 94 | Mark a book read on Goodreads from the app (signed-in web view) | apps | built (CHANGELOG 94.0.0; Kernel opens the page, Goodreads' own button marks it, so no one's account is touched by the agent) |
+| 95 | Quiz me: three questions per chapter, answers checked | apps, web | built (CHANGELOG 95.0.0; blanks the chapter's own bold terms, no model) |
+| 96 | Key ideas card at the top of each book | apps, web | built (CHANGELOG 96.0.0; the summary's own takeaways, five at most) |
+| 97 | Two-line recap at the end of each chapter in Listen | apps, web | built (CHANGELOG 97.0.0; In short, from the chapter's key sentences) |
+| 98 | Connections: the same idea across your books | apps, web | built (CHANGELOG 98.0.0; on the search-by-meaning index, no new model) |
+| 99 | Search by voice: dictate into search, on the device | apps | built (CHANGELOG 99.0.0: the keyboard mic and Mac dictation fill search; a visible mic only if people miss it) |
+
