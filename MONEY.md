@@ -16,7 +16,7 @@ A reader who would rather hear a chapter summary in a natural voice than in the 
 
 ## Cost to serve
 
-ElevenLabs reads through `/api/speak`. The caps in the code: a monthly character budget for the whole app (default 50,000) and a daily budget per account (default 8,000), sized for the $5 ElevenLabs plan. Past those, the line goes to Cloudflare Aura-2 with its own caps (default 2,000,000 characters a month and 60,000 a day). Past those, the device voice. Every line is stored once, so a repeat costs nothing. `/api/ask` runs on Workers AI with its own caps (defaults 150,000 characters a day and 5,000,000 a month). The worst case is those caps. Lower `ASK_MONTHLY_CHARS` if the Ask bill matters.
+ElevenLabs reads through `/api/speak`. The caps in the code: a monthly character budget for the whole app (default 50,000) and a daily budget per account (default 8,000), sized for the $5 ElevenLabs plan. Past those, the line goes to Cloudflare Aura-2 with its own caps (default 2,000,000 characters a month, 60,000 a day per account, and 2,500 a day for the whole app, `TTS_AURA_APP_DAILY_CHARS`). That last cap exists because Aura costs ~2,727 neurons per 1,000 characters and the Workers free plan gives the whole Cloudflare account 10,000 neurons a day, shared with Turing; raise it on Workers Paid. Past those, the device voice. Every line is stored once, so a repeat costs nothing. `/api/ask` runs on Workers AI with its own caps (defaults 150,000 characters a day and 5,000,000 a month). The worst case is those caps. Lower `ASK_MONTHLY_CHARS` if the Ask bill matters.
 
 ## Where we are
 

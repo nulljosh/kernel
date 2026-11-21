@@ -70,6 +70,13 @@ export async function onRequest({ request, env }) {
 
 /** Cloudflare Workers AI's Aura-2 voice: $0.03 per 1,000 characters, no monthly wall. Stored for
  *  good like the ElevenLabs lines, with its own daily cap per account so one listener can't run up the bill. */
+// Aura bills ~2,727 neurons per 1,000 characters, and the Workers free plan gives the whole Cloudflare
+// account 10,000 neurons a day, shared with Turing's demo and the other Workers. Past ~3,600 characters
+// every AI call on the account fails until 00:00 UTC (2026-11-21: 209 Aura lines spent 56,915 neurons
+// and Turing's drawings all failed). So the whole app gets 2,500 characters a day (~6,800 neurons) and
+// the rest of the account keeps ~3,000. Raise TTS_AURA_APP_DAILY_CHARS on the Workers Paid plan.
+const AURA_APP_DAY = 2500;
+
 async function aura(env, text, who, hdr, why) {
   const fail = json({ error: why ? `Voice limit reached (${why}). Using the device voice.` : "The voice service did not answer." }, why ? 429 : 502);
   if (!env.AI) return fail;
@@ -79,7 +86,7 @@ async function aura(env, text, who, hdr, why) {
     const hit = await env.TTS_KV.get(key);
     if (hit) return new Response(hit, { headers: { ...hdr, "X-Tts-Cache": "hit", "X-Tts-Voice": "aura" } });
   }
-  const over = await spend(env.TTS_KV, who, text.length, { month: +env.TTS_AURA_MONTHLY_CHARS || 2000000, day: +env.TTS_AURA_DAILY_CHARS || 60000 }, new Date(), "aura:");
+  const over = await spend(env.TTS_KV, who, text.length, { month: +env.TTS_AURA_MONTHLY_CHARS || 2000000, day: +env.TTS_AURA_DAILY_CHARS || 60000, all: +env.TTS_AURA_APP_DAILY_CHARS || AURA_APP_DAY }, new Date(), "aura:");
   if (over) return json({ error: `Voice limit reached (${over}). Using the device voice.` }, 429);
   let mp3;
   try {
@@ -119,13 +126,14 @@ export const capsOf = env => ({ month: +env.TTS_MONTHLY_CHARS || 50000, day: +en
 export async function spend(kv, who, chars, caps, now, pre = "") {
   if (!kv) return null;
   const day = now.toISOString().slice(0, 10), month = day.slice(0, 7);
-  const mk = `${pre}m:${month}`, dk = `${pre}d:${who}:${day}`, uk = `${pre}um:${who}:${month}`;
-  const [m, d] = await Promise.all([kv.get(mk), kv.get(dk)]).then(r => r.map(v => +v || 0));
+  const mk = `${pre}m:${month}`, dk = `${pre}d:${who}:${day}`, uk = `${pre}um:${who}:${month}`, ak = `${pre}a:${day}`;
+  const [m, d, a] = await Promise.all([kv.get(mk), kv.get(dk), caps.all ? kv.get(ak) : null]).then(r => r.map(v => +v || 0));
   if (m + chars > caps.month) return "month";
   if (d + chars > caps.day) return "day";
+  if (caps.all && a + chars > caps.all) return "day";  // the whole app's day, not one account's
   const u = +(await kv.get(uk)) || 0;   // what this account spent this month, for the usage readout
   // KV blocks writes past its daily limit. With no count there is no cap, so stop spending instead of guessing.
-  const saved = await Promise.all([kv.put(mk, String(m + chars)), kv.put(dk, String(d + chars), { expirationTtl: 172800 }), kv.put(uk, String(u + chars), { expirationTtl: 3456000 })]).then(() => true, () => false);
+  const saved = await Promise.all([kv.put(mk, String(m + chars)), kv.put(dk, String(d + chars), { expirationTtl: 172800 }), kv.put(uk, String(u + chars), { expirationTtl: 3456000 }), caps.all ? kv.put(ak, String(a + chars), { expirationTtl: 172800 }) : null]).then(() => true, () => false);
   if (!saved) return "store";
   return null;
 }
