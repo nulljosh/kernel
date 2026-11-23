@@ -1,7 +1,7 @@
 // node --test: the Goodreads export file becomes the three shelves, quotes, ISBN wrappers and dates handled.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { csv, parseExport } from './goodreads-export.js';
+import { csv, parseExport } from '../goodreads-export.js';
 
 const file = '﻿Book Id,Title,Author,ISBN,ISBN13,My Rating,Number of Pages,Date Read,Exclusive Shelf\n' +
   '1,"Sapiens: A Brief History of Humankind",Yuval Noah Harari,"=""0062316095""","=""9780062316097""",4,443,2025/09/08,read\n' +

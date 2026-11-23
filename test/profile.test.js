@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync } from 'node:fs';
-const src = readFileSync(new URL('./profile.html', import.meta.url), 'utf8').match(/<script type="module">([\s\S]*?)<\/script>/)[1];
+const src = readFileSync(new URL('../profile.html', import.meta.url), 'utf8').match(/<script type="module">([\s\S]*?)<\/script>/)[1];
 // keep only the exported helpers; the rest needs a DOM
 writeFileSync('/tmp/profile-helpers.mjs', src.split('\n').filter(l => !l.startsWith('import ') && !l.startsWith('const db = ')).join('\n').split('const showAvatar')[0]);
 const { handleFor, avatarSVG } = await import('/tmp/profile-helpers.mjs');

@@ -1,4 +1,4 @@
-import { messages, onRequest } from './functions/api/ask.js';
+import { messages, onRequest } from '../functions/api/ask.js';
 import assert from 'node:assert/strict';
 
 const m = messages('T', 'Sun Tzu says plan first.', 'Why plan?');

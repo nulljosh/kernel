@@ -14,6 +14,8 @@ Chapter summaries of the books you own, read or listen to, on the web, iPhone, i
 - `books.json`: feeds the public /api, the MCP tools and cover matching.
 - Deploy the web: `sh scripts/build-site.sh` then `npx wrangler pages deploy dist --project-name bookrank --branch main --commit-dirty=true`. A push deploys nothing.
 
+Docs live in `docs/`, tests in `test/`, scripts in `scripts/`. The web app files stay at the root because Pages serves them from there.
+
 ## Rules
 - **KV writes run out.** A new voice line costs 4 puts, and the free plan allows 1,000 a day. Never leave a `put` unguarded in `speak.js`; `spend` stops paid voices when it cannot count.
 - **updated_at moves only on content edits.** jaybulb-api ignores a client `updated_at` and stamps a new one only when `content` is in the body. `listen.for` must equal the row's `updated_at` or the saved position and scripts are dropped.

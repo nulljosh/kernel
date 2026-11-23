@@ -1,5 +1,5 @@
-import { words, spend, pickModel, capsOf, viaApp } from './functions/api/speak.js';
-import { sigOk } from './functions/api/stripe-webhook.js';
+import { words, spend, pickModel, capsOf, viaApp } from '../functions/api/speak.js';
+import { sigOk } from '../functions/api/stripe-webhook.js';
 import assert from 'node:assert/strict';
 const text = 'Hi there you';
 const al = { characters: [...text], character_start_times_seconds: [...text].map((_, i) => i * 0.1) };
@@ -39,7 +39,7 @@ assert.equal(await viaApp('Bearer junk', 'anon'), false);               // known
 globalThis.fetch = realFetch;
 console.log('speak ok');
 
-import { estWords } from './functions/api/speak.js';
+import { estWords } from '../functions/api/speak.js';
 const ew = estWords('one two three', 13);
 assert.deepEqual(ew.map(w => [w.i, w.n]), [[0, 3], [4, 3], [8, 5]]);
 assert.ok(ew[0].t === 0 && ew[1].t < ew[2].t && ew[2].t < 13);

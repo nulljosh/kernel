@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { takeaways, keyIdeas, recap, quiz } from './study.js';
+import { takeaways, keyIdeas, recap, quiz } from '../study.js';
 const book = `# One\n\nHabits are the **compound interest** of self-improvement, small changes adding up over the years.\n\n## Key takeaways\n- Small habits compound into remarkable results over time.\n- Focus on systems rather than goals for lasting change.\n\n# Two\n\nThe **habit loop** has four parts: cue, craving, response and reward, and each can be designed.\n\nEnvironment shapes behavior more than motivation does, so design the space around you.\n\n# Three\n\nMake good habits obvious with an **implementation intention** that names a time and place for the action.`;
 assert.deepEqual(takeaways(book.split('# Two')[0]), ['Small habits compound into remarkable results over time.', 'Focus on systems rather than goals for lasting change.']);
 const ideas = keyIdeas(book);

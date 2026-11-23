@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { forgetKeys } from './functions/api/forget.js';
-import { sha, DEFAULTS } from './functions/api/speak.js';
+import { forgetKeys } from '../functions/api/forget.js';
+import { sha, DEFAULTS } from '../functions/api/speak.js';
 const kv = ['d:u:me:2026-10-29', 'um:u:me:2026-10', 'd:u:other:2026-10-29', 'aura:d:u:me:2026-10-29'];
 const list = async p => kv.filter(k => k.startsWith(p));
 const rows = [{ listen: { chapters: { 0: [{ host: 'A', line: 'Hello there.' }], 1: [{ host: 'A', line: 'Hello there.' }] } } }, { listen: null }];

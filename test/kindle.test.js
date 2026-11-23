@@ -1,7 +1,7 @@
 // node --test: My Clippings.txt becomes books with their highlights; notes, bookmarks and repeats drop out.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseClippings, kindleChapter } from './kindle.js';
+import { parseClippings, kindleChapter } from '../kindle.js';
 
 const file = '﻿Deep Work (Cal Newport)\r\n- Your Highlight on page 12 | Location 180-182 | Added on Monday, March 3, 2025 10:00:00 AM\r\n\r\nClarity about what matters provides clarity about what does not.\r\n==========\r\n' +
   'Deep Work (Cal Newport)\n- Your Note on page 12 | Location 182 | Added on Monday, March 3, 2025 10:01:00 AM\n\nmy own note\n==========\n' +
@@ -22,7 +22,7 @@ test('kindleChapter adds only what the summary does not have', () => {
 });
 
 test('parseReadwise reads the CSV export into books, and is null for other files', async () => {
-  const { parseReadwise } = await import('./kindle.js');
+  const { parseReadwise } = await import('../kindle.js');
   const file = 'Highlight,Book Title,Book Author,Amazon Book ID,Note\n"Small habits, compounded, win.",Atomic Habits,James Clear,,\n"You do not rise to your goals.\nYou fall to your systems.",Atomic Habits,James Clear,,\n';
   assert.deepEqual(parseReadwise(file), [{ title: 'Atomic Habits', author: 'James Clear', lines: ['Small habits, compounded, win.', 'You do not rise to your goals. You fall to your systems.'] }]);
   assert.equal(parseReadwise('Book Id,Title\n1,x'), null);

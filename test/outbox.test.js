@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 const store = {};
 globalThis.localStorage = { getItem: k => store[k] ?? null, setItem: (k, v) => { store[k] = v; }, removeItem: k => { delete store[k]; } };
-const { save, flush, pending } = await import('./outbox.js');
+const { save, flush, pending } = await import('../outbox.js');
 let online = false; const sent = [];
 const send = async (id, f) => online ? (sent.push([id, f]), { error: null }) : { error: Object.assign(new Error('offline'), { status: 0 }) };
 assert.equal((await save(send, 'a', { notes: { 0: 'x' } })).queued, true);

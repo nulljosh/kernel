@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { score, CASES } from './narrate-eval.mjs';
+import { score, CASES } from '../scripts/narrate-eval.mjs';
 const notes = '# Two\n\nThe habit loop has four parts: cue, craving, response and reward, and each one can be designed on purpose by you.';
 const good = Array.from({ length: 12 }, (_, i) => `Idea ${i + 1} matters because small steps add up. Think of a savings account growing.`);
 const opts = { ch: 1, total: 5 };

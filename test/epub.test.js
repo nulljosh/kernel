@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { deflateRawSync } from 'node:zlib';
-import { epubToMarkdown, section } from './epub.js';
+import { epubToMarkdown, section } from '../epub.js';
 
 function zip(entries) {   // a minimal zip writer for the test: [name, string, deflate?]
   const parts = [], dir = []; let off = 0;
@@ -38,7 +38,7 @@ test('epubToMarkdown follows the spine and skips the cover', async () => {
 });
 
 test('chunks splits at paragraphs and never goes over the cap', async () => {
-  const { chunks } = await import('./epub.js');
+  const { chunks } = await import('../epub.js');
   const text = Array.from({ length: 50 }, (_, i) => `Paragraph ${i} `.repeat(20)).join('\n\n');
   const out = chunks(text, 1000);
   assert.ok(out.length > 1 && out.every(c => c.length <= 1000));

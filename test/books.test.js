@@ -3,7 +3,7 @@
 // erroring. ponytail: data integrity only; the pages are static HTML with no logic to test.
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const books = require('./books.json');
+const books = require('../books.json');
 
 const SECTIONS = ['ranked', 'recent', 'toRead', 'summary', 'pick'];
 const ranked = books.filter(b => b.section === 'ranked');

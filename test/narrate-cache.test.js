@@ -1,7 +1,7 @@
 // A chapter narrated once is served from KV after that: the 70B model runs once per input.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { onRequest } from './functions/api/narrate.js';
+import { onRequest } from '../functions/api/narrate.js';
 
 test('second identical narration is a KV hit, no model call', async () => {
   globalThis.fetch = async () => new Response('{}', { status: 200 });

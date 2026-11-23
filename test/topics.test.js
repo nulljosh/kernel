@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { topicsOf, shelfTopics } from './topics.js';
+import { topicsOf, shelfTopics } from '../topics.js';
 
 assert.deepEqual(topicsOf('AI Investing for Dummies'), ['AI and tech', 'Money']);
 assert.deepEqual(topicsOf('Calculus For Dummies'), ['Science and math']);

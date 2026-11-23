@@ -1,10 +1,10 @@
-import './goodreads-parse.js';
+import '../goodreads-parse.js';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 const { shelf, status, day } = globalThis.GR;
 
 // Archived public pages (goodreads.com, 2025), trimmed to a few rows.
-const rows = shelf(readFileSync(new URL('./test/fixtures/goodreads/shelf.html', import.meta.url), 'utf8'));
+const rows = shelf(readFileSync(new URL('./fixtures/goodreads/shelf.html', import.meta.url), 'utf8'));
 assert.equal(rows.length, 3);
 assert.deepEqual(rows[0], {
   id: '7759341668', bookId: '6305619', title: 'Use of Weapons', author: 'Iain M. Banks',
@@ -25,7 +25,7 @@ assert.deepEqual(shelf('<html>sign in</html>'), []);
 assert.equal(shelf(own.replace('data-rating="4"', 'data-rating="3.0"'))[0].rating, 3);   // the owner's own list (2026-10-28)
 assert.equal(shelf(own.replace(/<td class="field review">[\s\S]*?<\/td>/, '<td class="field review"><div class="value"><a href="/review/edit/9">Write a review</a></div></td>'))[0].review, null);
 
-const st = status(readFileSync(new URL('./test/fixtures/goodreads/status.html', import.meta.url), 'utf8'));
+const st = status(readFileSync(new URL('./fixtures/goodreads/status.html', import.meta.url), 'utf8'));
 assert.ok(Object.keys(st).length >= 2);
 assert.deepEqual(status('<div id="user_status_2"><span class="user_status_header"> X is on page 230 of 368 of <a href="https://www.goodreads.com/book/show/229200852-flesh">Flesh</a> </span></div><div id="user_status_1"><span class="user_status_header"> X is 10% done with <a href="/book/show/229200852-flesh">Flesh</a></span></div>'),
   { 229200852: { page: 230, of: 368, percent: 63 } });   // newest update wins

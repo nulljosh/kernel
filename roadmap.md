@@ -23,7 +23,7 @@ Moved to docs/roadmap-rows-built.md (rows 3 to 99, all built; 67 and 93 still wa
 - [ ] Summaries still to finish from PDFs (no more page photos): Agentic AI 1 to 11, Apple 1 to 12, Becoming Steve Jobs 1 to 10, ChatGPT 4 on, Claude AI 4 on, Data Science For Dummies 1 to 19, Exercise 1 to 2, Hackers and Painters 1 and 7 to 15, Video Game Design 10 on, plus Cracking AP Computer Science, Raw and The Man Who Solved the Market. Claude AI For Dummies still has no cover.
 
 ## Hazard
-`sync-summaries.sh` copies iCloud over the repo, it does not merge. On 2026-08-17 it replaced a full The Optimist with a shorter iCloud copy, and git was the only place four chapters still lived. After every sync run `git diff --stat` and treat a summary that got smaller as a bug, never a change to commit.
+`scripts/sync-summaries.sh` copies iCloud over the repo, it does not merge. On 2026-08-17 it replaced a full The Optimist with a shorter iCloud copy, and git was the only place four chapters still lived. After every sync run `git diff --stat` and treat a summary that got smaller as a bug, never a change to commit.
 
 History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in [docs/SHIPPING.md](docs/SHIPPING.md).
 

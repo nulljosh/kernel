@@ -30,4 +30,4 @@ sh scripts/build-site.sh # builds dist/, then wrangler pages deploy dist
 
 The apps come from `ios/project.yml` with xcodegen.
 
-[Changelog](docs/CHANGELOG.md) · [Roadmap](roadmap.md) · [Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) · [Shipping](docs/SHIPPING.md) · [Whitepaper](WHITEPAPER.md)
+[Changelog](docs/CHANGELOG.md) · [Roadmap](roadmap.md) · [Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) · [Shipping](docs/SHIPPING.md) · [Whitepaper](docs/WHITEPAPER.md)

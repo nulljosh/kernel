@@ -1,9 +1,9 @@
 // AppTransaction check against a throwaway chain built like Apple's (P-384 root and intermediate, P-256
 // leaf, the App Store receipt markers), pinned by its own fingerprint instead of Apple Root CA - G3.
-import { appProof, APPLE_ROOT_G3 } from './functions/api/apple.js';
+import { appProof, APPLE_ROOT_G3 } from '../functions/api/apple.js';
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-const fx = n => readFileSync(new URL(`./test/fixtures/apple/${n}`, import.meta.url), 'utf8').trim();
+const fx = n => readFileSync(new URL(`./fixtures/apple/${n}`, import.meta.url), 'utf8').trim();
 const [leaf, mid, root] = ['leaf.b64', 'mid.b64', 'root.b64'].map(fx);
 const der = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const hex = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');

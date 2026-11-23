@@ -1,8 +1,8 @@
 // node --test: search by meaning picks real lines and ranks them by cosine; /api/embed is gated and metered.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { lines, cosine, closest } from './meaning.js';
-import { onRequest } from './functions/api/embed.js';
+import { lines, cosine, closest } from '../meaning.js';
+import { onRequest } from '../functions/api/embed.js';
 
 test('lines skips headings and scraps, keeps chapter and line', () => {
   const md = '# Book\n\n## One\n\nShort.\n\nA real sentence that says something worth finding later on.\n\n## Two\n\nAnother real sentence about staying calm under pressure.';
@@ -33,7 +33,7 @@ test('/api/embed needs an account and stops at the cap', async () => {
   assert.equal((await onRequest({ request: post({ texts: ['too much text'] }, 'Bearer t'), env })).status, 429);
 });
 
-import { related } from './meaning.js';
+import { related } from '../meaning.js';
 {
   const b = (id, vecs) => ({ id, title: id, lines: vecs.map((_, i) => ({ ch: 0, line: i, title: 'c', text: `${id} ${i}` })), vecs });
   const books = [b('mine', [[1, 0]]), b('other', [[0.9, 0.1], [0, 1]]), b('third', [[0.6, 0.4]])];

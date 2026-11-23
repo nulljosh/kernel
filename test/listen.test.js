@@ -3,7 +3,7 @@
 // loading) fail here before they reach a browser.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { coverCandidates, chapters, blocks, chunk, pickVoices, voicePair, matchCover, progress, createPlayer, shareUrl } from './listen.js';
+import { coverCandidates, chapters, blocks, chunk, pickVoices, voicePair, matchCover, progress, createPlayer, shareUrl } from '../listen.js';
 
 const MD = '# Book\n\n## One\n\nFirst para.\nstill first.\n\n- a\n- b\n\n## Two\n\nSecond.';
 
@@ -148,16 +148,16 @@ test('coverCandidates: work cover, then isbn, then edition, none when empty', ()
   assert.deepEqual(coverCandidates({}), []);
 });
 
-import { minutes } from './listen.js';
+import { minutes } from '../listen.js';
 assert.equal(minutes(''), 1);
 assert.equal(minutes('x'.repeat(1100 * 7)), 7);
 console.log('minutes ok');
-import { duration } from './listen.js';
+import { duration } from '../listen.js';
 assert.equal(duration(45), '45 min'); assert.equal(duration(261), '4 hr 21 min'); assert.equal(duration(120), '2 hr');
 console.log('duration ok');
 
 test('findLine finds the chapter and line that hold the words, any case', async () => {
-  const { findLine } = await import('./search.js');
+  const { findLine } = await import('../search.js');
   const md = '# Book\n\n## One\n\nFirst para.\n\n- A list item about Ideas.\n\n## Two\n\nThe kernel of it all.';
   assert.deepEqual(findLine(md, 'IDEAS'), { ch: 0, line: 2, title: 'One', text: 'A list item about Ideas.' });
   assert.equal(findLine(md, 'kernel').ch, 1);

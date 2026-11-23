@@ -1,7 +1,7 @@
 // Narrator eval (row 93): a fixed set of chapters, each narrated by /api/narrate and scored by plain
 // rules, so a prompt change in functions/api/narrate.js is judged on the same set every time.
-// Run: node narrate-eval.mjs [base url]. Reads summaries/ (private, gitignored) and the QA account in .env.
-import { chapters, plain } from './listen.js';
+// Run: node scripts/narrate-eval.mjs [base url]. Reads summaries/ (private, gitignored) and the QA account in .env.
+import { chapters, plain } from '../listen.js';
 
 // Openings, middles, endings, a long dense chapter and the three other languages.
 export const CASES = [

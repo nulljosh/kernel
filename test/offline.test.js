@@ -23,7 +23,7 @@ uid = 'u2';
 assert.ok((await cached('list', q(null))).error);                                    // another account never sees u1's copy
 
 // An expired token with no network keeps the session (so the kept copies above stay reachable); a refused refresh signs out.
-const { createClient } = await import('./spark.js');
+const { createClient } = await import('../spark.js');
 const jwt = '.' + Buffer.from(JSON.stringify({ exp: 1 })).toString('base64url') + '.';
 const mem = () => { const m = { 'spark.session': JSON.stringify({ access_token: jwt, refresh_token: 'r', user: { id: 'u1' } }) }; return { getItem: k => m[k] ?? null, setItem: (k, v) => { m[k] = v; }, removeItem: k => { delete m[k]; } }; };
 globalThis.fetch = async () => { throw new TypeError('Failed to fetch'); };

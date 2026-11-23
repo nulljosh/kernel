@@ -1,4 +1,4 @@
-import { parseFeed, userId, cleanTitle, parseProfile, bestQuote } from './functions/api/goodreads.js';
+import { parseFeed, userId, cleanTitle, parseProfile, bestQuote } from '../functions/api/goodreads.js';
 import assert from 'node:assert/strict';
 assert.equal(userId('https://www.goodreads.com/user/show/62164337-josh'), '62164337');
 assert.equal(userId('62164337'), '62164337');
@@ -25,7 +25,7 @@ assert.deepEqual(bestQuote(q('x'.repeat(300), '9,999') + q('Short and loved.', '
 assert.equal(bestQuote(''), null);
 assert.equal(parseFeed('<item><title>Half</title><user_rating>3.5</user_rating></item>')[0].rating, 3.5);   // Goodreads allows half stars now
 console.log('goodreads ok');
-import { parseReading } from './functions/api/goodreads.js';
+import { parseReading } from '../functions/api/goodreads.js';
 // The public profile's Currently Reading box (structure from goodreads.com, 2026-10-28).
 const box = `<div id="currentlyReadingReviews"> <div class="Updates no_border"> <div class="firstcol"> <a title="Acing" href="/book/show/62241112-acing"><img alt="Acing the System ..." src="https://i.gr-assets.com/b/62241112._SX98_.jpg" /></a> </div>
  <div class="userReview"> <strong><a href="/user/show/1-x">X</a></strong> is currently reading </div> <div><a class="bookTitle" href="/book/show/62241112-acing">Acing the System Design Interview</a></div> <div> <span class="by smallText">by</span> <a class="authorName" href="/author/show/1.Z">Zhiyong Tan</a> </div></div>

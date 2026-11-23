@@ -1,4 +1,4 @@
-import { mergeMarks } from './marks.js';
+import { mergeMarks } from '../marks.js';
 import assert from 'node:assert/strict';
 const m = (ch, text) => ({ ch, text });
 const a = m(0, 'a'), b = m(0, 'b'), c = m(1, 'c'), d = m(2, 'd');
@@ -15,7 +15,7 @@ assert.deepEqual(mergeMarks([], [m(0, 'c')], [c]), [m(0, 'c'), c]);
 console.log('marks ok');
 
 // Export: a section per book, chapter titles, quotes in chapter order.
-const { marksMarkdown } = await import('./marks.js');
+const { marksMarkdown } = await import('../marks.js');
 {
   const md = marksMarkdown([
     { title: 'Book A', content: '# One\n\nx\n\n# Two\n\ny', marks: [{ ch: 1, text: 'later line' }, { ch: 0, text: 'first line' }] },
@@ -27,7 +27,7 @@ const { marksMarkdown } = await import('./marks.js');
 
 // Today's five: same day, same five; another day, another order; never more than five.
 {
-  const { dailyFive } = await import('./marks.js');
+  const { dailyFive } = await import('../marks.js');
   const all = Array.from({ length: 12 }, (_, i) => m(0, `line ${i}`));
   const a = dailyFive(all, '2026-10-28'), b = dailyFive([...all].reverse(), '2026-10-28');
   assert.equal(a.length, 5); assert.deepEqual(a, b);
@@ -37,7 +37,7 @@ const { marksMarkdown } = await import('./marks.js');
   assert.deepEqual(a.map(x => x.text), ['line 11', 'line 10', 'line 8', 'line 9', 'line 6']);
 }
 
-import { catchUp } from './marks.js';
+import { catchUp } from '../marks.js';
 {
   const q = { listen: { for: 'v1', pos: { ch: 2, line: 0, at: 1000 }, marks: [{ ch: 0, text: 'a' }] }, updated_at: 'v1' };
   const later = catchUp(q, { for: 'v1', pos: { ch: 5, line: 3, at: 2000 }, marks: [{ ch: 1, text: 'b' }] });

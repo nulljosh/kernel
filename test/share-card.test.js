@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { cardMeta } from './functions/share.js';
+import { cardMeta } from '../functions/share.js';
 const m = cardMeta({ title: 'A "quoted" <b>book</b>', cover: 'https://covers.openlibrary.org/b/id/1-L.jpg' }, 'https://bookrank.jaybulb.com/share?t=x');
 assert.match(m, /property="og:title" content="A &quot;quoted&quot; &lt;b&gt;book&lt;\/b&gt; · Kernel"/);
 assert.match(m, /og:image" content="https:\/\/covers.openlibrary.org/);
