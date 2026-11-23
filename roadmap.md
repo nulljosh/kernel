@@ -48,3 +48,19 @@ History is in [docs/CHANGELOG.md](docs/CHANGELOG.md) and git. How to ship is in 
 - [ ] (Note "Kernel") Needs registration or login onboarding. Model: ElevenReader's first screen, fanned book covers, "Listen to anything" line, then Continue with Apple / Google / email capsules. Screenshot: notes/attachments/2026-11-18/22414-1.png. (Answers the row 135 ElevenReader question: copy its features.)
 - [ ] (Note "Kernel") "This is what Kernel should be. Also it has a better animated App Store banner." Reference is ElevenReader's icon, a black sunburst glyph on white with depth: notes/attachments/2026-11-18/22418-1.png. Q: icon redo, App Store banner animation, or both?
 - [ ] (Note "Kernel") Add a payment subscription like ElevenReader's paywall: hero art, rating plus user count, "without limits" headline, 4 checkmark benefits, Annual (3 days free, then $129, "Best value, save $51", $10.75/mo) vs Monthly $15/mo, "Try for $0.00" button, "We'll notify you before it ends. Cancel anytime." Needs IAP, not Stripe. Screenshot: notes/attachments/2026-11-18/22441-1.png
+
+## Ingested 2026-11-23
+
+- [ ] **Kernel**: Mark as finished should remove the nook from currently reading
+  - Obviously
+  - It’s broken right now.
+- [ ] **Kernel**: Kernel
+  - Bottom audio bar overwrites or covers bottom nav.
+  - Screenshots (not yet read): `notes/attachments/2026-11-23/22851-1.png`
+- [ ] **Kernel**: Claude for dummies
+  - Done the book
+- [ ] **Kernel**: Eleven labs forever
+  - What’s the subscription plans?
+  - Don’t fall back anymore
+- [ ] **Kernel**: inspo
+  - Screenshots (not yet read): `notes/attachments/2026-11-23/22905-1.png`
