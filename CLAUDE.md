@@ -23,6 +23,7 @@ Chapter summaries of the books you own, read or listen to, on the web, iPhone, i
 - **Goodreads** cookies and shelves stay on the device. Never send them to the server, and never sign in as Joshua.
 - **No audio in QA.** `Speaker.play` returns under `UITEST_PLAYER` and `UITEST_SNAPSHOT`; never press Listen in a simulator.
 - **Screenshots on every UI change**, light and dark: `sh ios/scripts/shots.sh` (headless simulators, shut down after). On the Mac pass flags dash-style (`-UITEST_SNAPSHOT 1`), or AppKit opens them as files.
+- **Versions: the major stays at 20.** Features bump the minor (20.2, 20.3), fixes bump the patch. A new major only for a real break, like dropping an old sign-in path. The App Store never lets a version go back down.
 - **Store screenshots** avoid objectionable book text (The Contrarian, The Optimist).
 
 ## Auth and paying
