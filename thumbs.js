@@ -1,5 +1,5 @@
 // Book covers for the web library, split out of library.html.
-import { matchCover, coverCandidates } from './listen.js';
+import { matchCover, coverCandidates, fallbackCover } from './listen.js';
 
 /** A thumb(row) maker; save(row, url) keeps a newly found cover on the row. */
 export function thumbs(save) {
@@ -37,8 +37,9 @@ export function thumbs(save) {
   const nearScreen = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { nearScreen.unobserve(e.target); e.target.load(); } }), { rootMargin: '600px' });
   function thumb(row) {
     const img = Object.assign(document.createElement('img'), { className: 'thumb', alt: '', loading: 'lazy' });
-    img.onerror = () => { img.removeAttribute('src'); img.className = 'thumb-empty'; };   // offline, the cover host is out of reach
-    img.load = () => resolveCover(row).then(u => { if (u) img.src = u; else img.className = 'thumb-empty'; });
+    const drawn = () => { img.onerror = null; img.src = fallbackCover(row.title); };   // not saved: a real cover can still win later
+    img.onerror = drawn;   // offline, the cover host is out of reach
+    img.load = () => resolveCover(row).then(u => { if (u) img.src = u; else drawn(); });
     if (row.cover) img.load(); else nearScreen.observe(img);
     return img;
   }

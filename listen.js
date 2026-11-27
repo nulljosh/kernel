@@ -55,7 +55,7 @@ import { pickVoices, voicePair } from './voices.js';
 export { pickVoices, voicePair };
 
 // Covers and share links live in covers.js; re-exported so pages keep importing from here.
-export { matchCover, coverCandidates, shareUrl } from './covers.js';
+export { matchCover, coverCandidates, fallbackCover, shareUrl } from './covers.js';
 
 // 0..1 across the whole book. Chapters are weighted equally because unfetched ones have
 // no line count yet.
